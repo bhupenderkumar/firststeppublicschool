@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div class="h-screen w-screen  p-8">
+        <div class="flex flex-col justify-center h-full">
+            <h1 class="text-3xl text-center mb-4"><i class="fas fa-exclamation-circle"></i> Error</h1>
+            <p class="mb-4">
+                An error occurred while processing your request. Please reach out to the office admin department for more information.
+            </p>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>

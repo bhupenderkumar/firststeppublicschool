@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Grievance</title>
+
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <!-- Scripts -->
+    <script>
+        function validateForm() {
+            const details = document.getElementById("grievance_details").value.trim();
+            if (!details) {
+                alert("Please fill out the grievance details properly!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <!-- Raise Grievance Form -->
+    
+
+    <!-- Grievances Table -->
+    <div class="container">
+        <h1 class="text-3xl text-center mb-4"> Grievances</h1>
+
+        <table class="min-w-full bg-white shadow-md rounded">
+            <thead>
+                <tr>
+                    <th class="w-1/6 py-2">Grievance ID</th>
+                    <th class="w-1/6 py-2">User user_name</th>
+                    <th class="w-1/6 py-2">Class Name</th>
+                    <th class="w-1/6 py-2">Grievance Details</th>
+                    <th class="w-1/6 py-2">School Response</th>
+                    <th class="w-1/6 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grievance in grievances %}
+                <tr class="border-t">
+                    <td class="py-2 px-3">{{ grievance.grievance_id }}</td>
+                    <td class="py-2 px-3">{{ grievance.user_name }}</td>
+                    <td class="py-2 px-3">{{ grievance.class_name }}</td>
+                    <td class="py-2 px-3">{{ grievance.grievance_text }}</td>
+                    <td class="py-2 px-3">{{ grievance.school_response or "Awaiting response" }}</td>
+                    <td class="py-2 px-3">
+                        <form action="/respond_grievance/{{ grievance.grievance_id }}" method="POST">
+                            <textarea name="school_response" value="{{grievance.school_response}}" placeholder="Add/Update response"/>
+                            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Respond</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if not grievances %}
+        <p class="mt-4 text-center">You have not raised any grievances yet.</p>
+        {% endif %}
+    </div>
+
+    {% include 'footer.html' %}
+</body>
+<script>
+    async function submitFormAndReload(event) {
+        setTimeout(() => {
+            location.reload();  
+        }, 3000);  
+    }
+</script>
+
+</html>

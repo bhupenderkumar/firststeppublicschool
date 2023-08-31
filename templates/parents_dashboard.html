@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parents Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div class="">
+        <h2 class="text-2xl font-semibold mb-4 mt-10 ">Welcome to Your Dashboard</h2>
+        <ul class="space-y-4">
+            <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
+                <i class="fas fa-comments text-blue-500 text-2xl mt-1 mr-4"></i>
+                <div>
+                    <h3 class="text-lg font-semibold">Raise Grievance</h3>
+                    <p>Raise your concerns and grievances. We are here to listen and address your issues promptly.</p>
+                </div>
+            </li>
+            <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
+                <i class="fas fa-file-download text-blue-500 text-2xl mt-1 mr-4"></i>
+                <div>
+                    <h3 class="text-lg font-semibold">Download Fees Receipt</h3>
+                    <p>Access and download your fees receipts for your records and reference.</p>
+                </div>
+            </li>
+            <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
+                <i class="fas fa-money-bill text-blue-500 text-2xl mt-1 mr-4"></i>
+                <div>
+                    <h3 class="text-lg font-semibold">View Fees</h3>
+                    <p>View detailed information about your fees structure and payment history.</p>
+                </div>
+            </li>
+            <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
+                <i class="fas fa-calendar-check text-blue-500 text-2xl mt-1 mr-4"></i>
+                <div>
+                    <h3 class="text-lg font-semibold">View Attendance</h3>
+                    <p>Keep track of your attendance records and stay informed about your attendance history.</p>
+                </div>
+            </li>
+            <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
+                <i class="fas fa-list text-blue-500 text-2xl mt-1 mr-4"></i>
+                <div>
+                    <h3 class="text-lg font-semibold">View Activities List</h3>
+                    <p>Explore a list of upcoming and past activities and events organized by the school.</p>
+                </div>
+            </li>
+            <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
+                <i class="fas fa-calendar-alt text-blue-500  text-2xl mt-1 mr-4"></i>
+                <div>
+                    <h3 class="text-lg font-semibold">View Holiday Calendar</h3>
+                    <p>Stay updated with the school's holiday calendar and important dates.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+
+    {% include 'footer.html' %}
+</body>
+
+</html>

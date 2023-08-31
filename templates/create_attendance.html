@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Attendance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        /* Add your custom styles here */
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <div >
+            <h1 class="text-3xl text-center mb-6">Insert Attendance</h1>
+            <form action="/insert_attendance" method="POST" onsubmit="return validateForm();">
+                <!-- Class Name Dropdown -->
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700 block mb-2">Class Name</label>
+                    <select id="class_name" name="class_name" onchange="fetchStudents()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="">Select Class</option>
+                        {% for class_name in classes %}
+                        <option value="{{ class_name }}">{{ class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4" id="studentsDropdown" style="display:none;">
+                    <label for="student_list" class="text-gray-700 block mb-2">Students</label>
+                    <select id="student_list" name="student_id[]" multiple
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <!-- Populate students dynamically here -->
+                    </select>
+                </div>
+                <input type="text" name="status" hidden value="Present"/>
+                <div class="mb-4">
+                    <label for="attendance_date" class="text-gray-700 block mb-2">Attendance Date</label>
+                    <input id="attendance_date" name="attendance_date" type="date"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Insert
+                        Attendance</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code for fetching and populating student names based on class selection
+        // JavaScript code for fetching and populating student names based on class selection
+        function fetchStudents() {
+            const selectedClass = document.getElementById('class_name').value;
+            fetch(`/get-students/${selectedClass}`)
+                .then(response => response.json())
+                .then(data => {
+                    let studentsDropdown = document.getElementById('student_list');
+                    studentsDropdown.innerHTML = "";
+
+                    if (data && data.length > 0) {
+                        data.forEach(student => {
+                            let option = document.createElement('option');
+                            option.value = student._id;
+                            option.textContent = student.username; // Modify this to include other student information if needed
+                            studentsDropdown.appendChild(option);
+                        });
+
+                        document.getElementById('studentsDropdown').style.display = 'block';
+                    } else {
+                        document.getElementById('studentsDropdown').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching students:', error);
+                });
+        }
+
+
+        // JavaScript code for form validation
+        function validateForm() {
+            const className = document.getElementById("class_name").value.trim();
+            const studentIDs = document.querySelectorAll("#student_list option:checked");
+            const attendanceDate = document.getElementById("attendance_date").value.trim();
+
+            if (!className) {
+                alert("Please select a class.");
+                return false;
+            }
+
+            if (studentIDs.length === 0) {
+                alert("Please select at least one student.");
+                return false;
+            }
+
+            if (!attendanceDate) {
+                alert("Please select an attendance date.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+
+</html>

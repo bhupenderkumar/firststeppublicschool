@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities Plan</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div  class="h-screen w-screen  flex flex-col justify-center items-center">
+        <div class="w-3/4">
+        <h1 class="text-3xl text-center mb-4">Activities Plan</h1>
+            <p class="mb-4">
+                This is the activities plan for the {{ class_name }} class for the {{ year }} year.
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Activity</th>
+                        <th>Learning Objectives</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>June 1, 2023</td>
+                        <td>Mongo Activity</td>
+                        <td>
+                            * Learn about MongoDB basics<br>
+                            * Practice creating and querying documents
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>August 15, 2023</td>
+                        <td>Flag Activity</td>
+                        <td>
+                            * Understand the history and significance of national flags<br>
+                            * Create your own flag design
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>August 20, 2023</td>
+                        <td>Dental Activity</td>
+                        <td>
+                            * Learn about oral hygiene and dental health<br>
+                            * Practice brushing and flossing techniques
+                        </td>
+                    </tr>
+                    <!-- Add more activities for pre-school from September to December -->
+                    <tr>
+                        <td>September 5, 2023</td>
+                        <td>Storytelling Time</td>
+                        <td>
+                            * Listen to a fun and engaging story<br>
+                            * Participate in a creative storytelling activity
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>October 10, 2023</td>
+                        <td>Art and Craft Day</td>
+                        <td>
+                            * Create colorful artwork using different materials<br>
+                            * Explore your creativity through hands-on crafting
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>November 15, 2023</td>
+                        <td>Music and Dance Workshop</td>
+                        <td>
+                            * Experience the joy of music and rhythm<br>
+                            * Learn simple dance moves and express yourself through movement
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>December 20, 2023</td>
+                        <td>Winter Celebrations</td>
+                        <td>
+                            * Learn about various winter traditions around the world<br>
+                            * Enjoy festive activities and celebrate the holiday season
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>September 5, 2023</td>
+                        <td>Storytelling Time</td>
+                        <td>
+                            * Listen to a fun and engaging story<br>
+                            * Participate in a creative storytelling activity
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>October 10, 2023</td>
+                        <td>Art and Craft Day</td>
+                        <td>
+                            * Create colorful artwork using different materials<br>
+                            * Explore your creativity through hands-on crafting
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>November 15, 2023</td>
+                        <td>Music and Dance Workshop</td>
+                        <td>
+                            * Experience the joy of music and rhythm<br>
+                            * Learn simple dance moves and express yourself through movement
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>December 20, 2023</td>
+                        <td>Winter Celebrations</td>
+                        <td>
+                            * Learn about various winter traditions around the world<br>
+                            * Enjoy festive activities and celebrate the holiday season
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+</body>
+
+</html>

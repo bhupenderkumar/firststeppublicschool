@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Fee</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function validateForm() {
+            const studentName = document.getElementById("student_name").value.trim();
+            const studentID = document.getElementById("student_id").value.trim();
+            const amount = document.getElementById("amount").value.trim();
+            const dueDate = document.getElementById("submit_date").value.trim();
+            if (!studentName || !studentID || !amount || !dueDate) {
+                alert("Please fill out all the fields properly!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+
+<body class=" h-screen">
+    {% include 'header.html' %}
+    
+    <div class="container mx-auto py-12">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h1 class="text-3xl text-center mb-6">Create Fee</h1>
+            <form action="/fees" method="POST" onsubmit="return validateForm();">
+                <!-- Class Name -->
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700 block mb-2">Class Name</label>
+                    <select id="class_name" name="class_name" onchange="fetchStudents()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="">Select Class</option>
+                        {% for class_name in classes %}
+                        <option value="{{ class_name.class_name }}">{{ class_name.class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Hidden Student Name -->
+                <input type="hidden" id="hidden_student_name" name="student_name">
+
+                <!-- Students Dropdown -->
+                <div class="mb-4" id="studentsDropdown" style="display:none;">
+                    <label for="student_list" class="text-gray-700 block mb-2">Students</label>
+                    <select id="student_list" name="student_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </select>
+                </div>
+
+                <!-- Amount -->
+                <div class="mb-4">
+                    <label for="amount" class="text-gray-700 block mb-2">Amount</label>
+                    <input id="amount" name="amount" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+
+                <!-- Submit Date -->
+                <div class="mb-4">
+                    <label for="submit_date" class="text-gray-700 block mb-2">Submit Date</label>
+                    <input id="submit_date" name="submit_date" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+
+                <!-- Fee Month -->
+                <div class="mb-4">
+                    <label for="fee_month" class="text-gray-700 block mb-2">Fee Month</label>
+                    <select id="fee_month" name="fee_month" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="">Select Month</option>
+                        {% for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
+                        <option value="{{ month }}">{{ month }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Fee Type -->
+                <div class="mb-4">
+                    <label for="fee_type" class="text-gray-700 block mb-2">Fee Type</label>
+                    <select id="fee_type" name="fee_type[]" multiple class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="Late Fees">Late Fees</option>
+                        <option value="Month Fee">Month Fee</option>
+                        <option value="Copy & Book Fee">Copy & Book Fee</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Fee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+<script>
+    function fetchStudents() {
+        const selectedClass = document.getElementById('class_name').value;
+        fetch(`/get-students/${selectedClass}`)
+            .then(response => response.text())
+            .then(data => {
+                let studentsDropdown = document.getElementById('student_list');
+                studentsDropdown.innerHTML = "";
+                data = JSON.parse(data);
+                if (data && data.length > 0) {
+                    data.forEach(student => {
+                        let option = document.createElement('option');
+                        option.value = student._id;
+                        option.textContent = `${student.username} (studentName)| ${student.fathername} (fathername)`;
+                        studentsDropdown.appendChild(option);
+                    });
+                    document.getElementById('studentsDropdown').style.display = 'block';
+                    document.getElementById('hidden_student_name').value = data[0].username;
+                    studentsDropdown.addEventListener('change', function() {
+                        let selectedOption = this.options[this.selectedIndex];
+                        document.getElementById('hidden_student_name').value = selectedOption.dataset.studentName;
+                    });
+                } else {
+                    document.getElementById('studentsDropdown').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching students:', error);
+            });
+    }
+</script>
+</html>

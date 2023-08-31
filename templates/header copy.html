@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Sidebar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            transition: left 0.3s;
+            overflow-x: hidden;
+        }
+
+        .navbar.active {
+            left: 0;
+        }
+
+        .navbar .nav-link {
+            color: #d1d8e0;
+        }
+
+        .navbar .nav-link.active {
+            color: #ffffff;
+            background-color: #212529;
+        }
+
+        /* Content */
+        .content {
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            padding: 20px;
+        }
+
+        .content.collapsed {
+            margin-left: 75px;
+        }
+
+        /* Hide sidebar on small screens */
+        @media (max-width: 768px) {
+            .navbar {
+                left: -250px;
+            }
+
+            .navbar.active {
+                left: 0;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class=" d-flex">
+    <!-- Sidebar -->
+    <nav class=" navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">First Step School</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if session.get('username') %}
+                        {% if session.get('user_role') == 'admin' or session.get('user_role') == 'teacher' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/insert_attendance"><i class="far fa-calendar-check"></i>
+                                    Attendance</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/fees"><i class="fas fa-dollar-sign"></i> Fees</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/raise_grievance"><i class="fas fa-comment-dots"></i> Raise
+                                Grievance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/syllabus"><i class="fas fa-book"></i> Syllabus</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/holiday-calendar"><i class="fas fa-calendar-alt"></i> Holiday
+                                Calendar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/activities-plan"><i class="fas fa-briefcase"></i> Activities
+                                Plan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/notifications"><i class="fas fa-bell"></i> Notification</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/fetch_attendance"><i class="far fa-calendar-check"></i>
+                                Attendance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout"><i class="fas fa-check-circle"></i> Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/signup"><i class="fas fa-user-plus"></i> Signup</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mx-auto mt-4">
+        {% for category, message in messages %}
+        <div
+            class="alert {% if category == 'success' %} bg-success {% elif category == 'danger' %} bg-danger {% endif %} text-white px-6 py-4 border-0 rounded relative mb-4">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $(".mobile-menu-button").click(function () {
+        $("#sidebar").toggleClass("active");
+    });
+});
+</script>
+
+</html>
+                

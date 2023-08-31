@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <!-- Notifications List -->
+    <div class="container pt-8">
+        <div class="bg-white shadow-md rounded ">
+            <h1 class="text-3xl text-center mb-6">Your Notifications</h1>
+            
+            <table class="min-w-full bg-white shadow-md rounded">
+                <thead>
+                    <tr>
+                        <th class="w-1/5 py-2">Notification ID</th>
+                        <th class="w-1/5 py-2">Class Name</th>
+                        <th class="w-1/5 py-2">Notification Text</th>
+                        <th class="w-1/5 py-2">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notification in notifications %}
+                    <tr class="border-t">
+                        <td class="py-2 px-3">{{ notification.notification_id }}</td>
+                        <td class="py-2 px-3">{{ notification.class_name }}</td>
+                        <td class="py-2 px-3">{{ notification.notification_text }}</td>
+                        <td class="py-2 px-3">{{ notification.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if not notifications %}
+            <p class="mt-4 text-center">You have no notifications at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+</body>
+
+</html>

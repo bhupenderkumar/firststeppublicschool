@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Notification</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div class="container mx-auto py-12">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h1 class="text-3xl text-center mb-4">Create Notification</h1>
+            <p class="mb-4">Please fill out this form to create a new notification.</p>
+            <form action="/create_notification" method="POST">
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700">Class Name</label>
+                    <select id="class_name" name="class_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="">Select Class</option>
+                        {% for class_name in classes %}
+                        <option value="{{ class_name }}">{{ class_name.class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="notification_text" class="text-gray-700">Notification Text</label>
+                    <textarea id="notification_text" name="notification_text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Notification</button>
+                </div>
+            </form>
+
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <h1 class="text-3xl text-center mb-6">Your Notification</h1>
+                <table class="min-w-full bg-white shadow-md rounded">
+                    <thead>
+                        <tr>
+                            <th class="w-1/5 py-2">Notification ID</th>
+                            <th class="w-1/5 py-2">Class Name</th>
+                            <th class="w-1/5 py-2">Notification Details</th>
+                            <th class="w-1/5 py-2">School Response</th>
+                            {% if is_admin %}
+                            <th class="w-1/5 py-2">Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grievance in grievances %}
+                        <tr class="border-t">
+                            <td class="py-2 px-3">{{ grievance.notification_id }}</td>
+                            <td class="py-2 px-3">{{ grievance.class_name }}</td>
+                            <td class="py-2 px-3">{{ grievance.notification_details }}</td>
+                            <td class="py-2 px-3">{{ grievance.school_response or "Awaiting response" }}</td>
+                           
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+    
+                {% if not grievances %}
+                <p class="mt-4 text-center">You have not raised any grievances yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>

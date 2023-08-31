@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+    /* Add alternating row colors */
+    .bg-striped tr:nth-child(even) {
+        background-color: #f7fafc; /* Change to your desired background color */
+    }
+
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div>
+        <div class="m-2">
+            <h1 class="text-3xl text-center mb-4">Holiday Calendar</h1>
+            <p class="mb-4">
+                This is the holiday calendar for the {{ year }} year for the {{ class_name }} class.
+            </p>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white table-auto border-collapse bg-striped">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b-2 border-gray-300  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                S. No.</th>
+                            <th class="py-2 px-4 border-b-2 border-gray-300  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Holiday</th>
+                            <th class="py-2 px-4 border-b-2 border-gray-300  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Date</th>
+                            <th class="py-2 px-4 border-b-2 border-gray-300  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                Day</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-50">
+                            <td class="py-2 px-4">1</td>
+                            <td class="py-2 px-4">Republic Day</td>
+                            <td class="py-2 px-4">26-01-2023</td>
+                            <td class="py-2 px-4">Thursday</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="py-2 px-4">2</td>
+                            <td class="py-2 px-4">Holi</td>
+                            <td class="py-2 px-4">08-03-2023</td>
+                            <td class="py-2 px-4">Wednesday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">3</td>
+                            <td class="py-2 px-4">Ram Navami</td>
+                            <td class="py-2 px-4">30-03-2023</td>
+                            <td class="py-2 px-4">Thursday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">4</td>
+                            <td class="py-2 px-4">Mahavir Jayanti</td>
+                            <td class="py-2 px-4">04-04-2023</td>
+                            <td class="py-2 px-4">Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">5</td>
+                            <td class="py-2 px-4">Good Friday</td>
+                            <td class="py-2 px-4">07-04-2023</td>
+                            <td class="py-2 px-4">Friday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">6</td>
+                            <td class="py-2 px-4">Id-ul-Fitr</td>
+                            <td class="py-2 px-4">22-04-2023</td>
+                            <td class="py-2 px-4">Saturday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">7</td>
+                            <td class="py-2 px-4">Buddha Pumima</td>
+                            <td class="py-2 px-4">05-05-2023</td>
+                            <td class="py-2 px-4">Friday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">8</td>
+                            <td class="py-2 px-4">Id-ul-Zuha (Bakrid)</td>
+                            <td class="py-2 px-4">29-06-2023</td>
+                            <td class="py-2 px-4">Thursday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">9</td>
+                            <td class="py-2 px-4">Muharram</td>
+                            <td class="py-2 px-4">29-07-2023</td>
+                            <td class="py-2 px-4">Saturday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">10</td>
+                            <td class="py-2 px-4">Independence Day</td>
+                            <td class="py-2 px-4">15-08-2023</td>
+                            <td class="py-2 px-4">Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">11</td>
+                            <td class="py-2 px-4">Janmashtami (Vaishnva)</td>
+                            <td class="py-2 px-4">07-09-2023</td>
+                            <td class="py-2 px-4">Thursday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">12</td>
+                            <td class="py-2 px-4">Milad-un-Nabi or Id-e Milad (Birthday of Prophet Mohammad)</td>
+                            <td class="py-2 px-4">28-09-2023</td>
+                            <td class="py-2 px-4">Thursday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">13</td>
+                            <td class="py-2 px-4">Mahatma Gandhi’s Birthday</td>
+                            <td class="py-2 px-4">02-10-2023</td>
+                            <td class="py-2 px-4">Monday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">14</td>
+                            <td class="py-2 px-4">Dussehra</td>
+                            <td class="py-2 px-4">24-10-2023</td>
+                            <td class="py-2 px-4">Tuesday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">15</td>
+                            <td class="py-2 px-4">Maharishi Valmiki’s Birthday</td>
+                            <td class="py-2 px-4">28-10-2023</td>
+                            <td class="py-2 px-4">Saturday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">16</td>
+                            <td class="py-2 px-4">Diwali (Deepavali)</td>
+                            <td class="py-2 px-4">12-11-2023</td>
+                            <td class="py-2 px-4">Sunday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">17</td>
+                            <td class="py-2 px-4">Guru Nanak’s Birthday</td>
+                            <td class="py-2 px-4">27-11-2023</td>
+                            <td class="py-2 px-4">Monday</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">18</td>
+                            <td class="py-2 px-4">Christmas Day</td>
+                            <td class="py-2 px-4">25-12-2023</td>
+                            <td class="py-2 px-4">Monday</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>

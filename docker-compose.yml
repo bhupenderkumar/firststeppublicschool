@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  admin_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    ports:
+      - "5002:5002"
+   
+    environment:
+      - FLASK_SECRET_KEY=your_secret_key_here
+      - MONGO_URI=mongodb://mongodb:27017/school_management
+      - FLASK_ENV=development
+      - FLASK_APP=app_admin.py
+    depends_on:
+      - mongodb
+    command: [ "flask", "run", "--host=0.0.0.0", "--port=5002" ]
+    networks:
+      - school2_shared_network
+
+  user_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.user
+    environment:
+      - FLASK_SECRET_KEY=your_secret_key_here
+      - MONGO_URI=mongodb://mongodb:27017/school_management
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    command: [ "flask", "run", "--host=0.0.0.0", "--port=5000" ]
+    networks:
+      - school2_shared_network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_container
+    ports:
+      - "27017:27017" # Map container port 27017 to host port 27017
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - school2_shared_network
+networks:
+  school2_shared_network:
+    driver: bridge
+volumes:
+  mongo_data:

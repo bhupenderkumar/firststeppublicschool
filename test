@@ -1,0 +1,11 @@
+school_management/
+├── app.py
+├── requirements.txt
+├── templates/
+│   ├── login.html
+│   ├── signup.html
+│   └── dashboard.html
+├── static/
+│   └── styles.css
+├── Dockerfile
+└── docker-compose.yml

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div class="container mx-auto h-auto p-6 flex justify-center items-start">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col w-full max-w-2xl">
+            <h1 class="text-3xl text-center mb-4">Edit Student Details</h1>
+            <fieldset class="mb-4">
+                <legend class="text-gray-700 font-bold mb-2">Select Class and Student:</legend>
+                <label>Class:
+                    <select id="classname" onchange="fetchStudents(this.value)" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                        <!-- Options are populated by your backend -->
+                        {% for class_name in classes %}
+                        <option value="{{ class_name }}">{{ class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            
+                <label>Student:
+                    <select id="studentname" onchange="fetchStudentDetails(this.value)" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                        <!-- This will be populated by JavaScript once a class is selected -->
+                    </select>
+                </label>
+            </fieldset>
+            
+            <form action="/edit-student/{{student.id}}" method="POST" enctype="multipart/form-data">
+
+                <!-- Student Details -->
+                <!-- NOTE: The value attributes in the input tags will hold the student's existing details -->
+                <fieldset class="mb-4">
+                    <legend class="text-gray-700 font-bold mb-2">Student Details:</legend>
+                    <label>First Name:
+                        <input type="text" name="first_name" value="{{student.first_name}}" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                    </label>
+                    <!-- ... Continue similarly for other fields ... -->
+                    <!-- Student Details -->
+                    <fieldset class="mb-4">
+                        <legend class="text-gray-700 font-bold mb-2">Student Details:</legend>
+                        <label>First Name: <input type="text" name="first_name" required
+                                value="{{ student.first_name }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                        <!-- ... Continue similarly for other fields ... -->
+                        <label>Place of Birth: <input type="text" name="place_of_birth" required
+                                value="{{ student.place_of_birth }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    </fieldset>
+
+                    <!-- Father's Details -->
+                    <fieldset class="mb-4">
+                        <legend class="text-gray-700 font-bold mb-2">Father's Details:</legend>
+                        <label>Name: <input type="text" name="father_name" required value="{{ student.father_name }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                        <!-- ... Continue similarly for other fields ... -->
+                    </fieldset>
+
+                    <!-- Mother's Details -->
+                    <fieldset class="mb-4">
+                        <legend class="text-gray-700 font-bold mb-2">Mother's Details:</legend>
+                        <label>Name: <input type="text" name="mother_name" required value="{{ student.mother_name }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                        <!-- ... Continue similarly for other fields ... -->
+                    </fieldset>
+
+                    <!-- ... Continue with Father's Details, Mother's Details, etc. ... -->
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update
+                            Student</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleSchoolName(selectElement) {
+            const schoolNameLabel = document.getElementById('schoolNameLabel');
+            const schoolNameInput = document.getElementById('schoolName');
+            if (selectElement.value === 'yes') {
+                schoolNameLabel.style.display = 'block';
+                schoolNameInput.required = true;
+            } else {
+                schoolNameLabel.style.display = 'none';
+                schoolNameInput.required = false;
+            }
+        }
+    </script>
+    <script>
+        function fetchStudents(classname) {
+            // Fetch students for the selected class
+            fetch(`/api/students?classname=${classname}`)
+                .then(response => response.json())
+                .then(data => {
+                    let studentDropdown = document.getElementById('studentname');
+                    studentDropdown.innerHTML = ""; // Clear current options
+                    data.forEach(student => {
+                        let option = document.createElement('option');
+                        option.value = student.id;
+                        option.innerText = student.name;
+                        studentDropdown.appendChild(option);
+                    });
+                });
+        }
+
+        function fetchStudentDetails(studentId) {
+            // Fetch student details and populate the form
+            fetch(`/api/student-details?id=${studentId}`)
+                .then(response => response.json())
+                .then(student => {
+                    // Sample: set the student's first name
+                    document.getElementsByName('first_name')[0].value = student.first_name;
+                    // ... Continue similarly for other fields ...
+                });
+        }
+    </script>
+    {% include 'footer.html' %}
+</body>
+
+</html>

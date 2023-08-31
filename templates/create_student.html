@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Student</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div class="container mx-auto h-auto p-6 flex justify-center items-start">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col w-full max-w-2xl">
+            <h1 class="text-3xl text-center mb-4">Register New Student</h1>
+            <form action="/create-student" method="POST" enctype="multipart/form-data">
+
+                <!-- Student Details -->
+                <fieldset class="mb-4">
+                    <legend class="text-gray-700 font-bold mb-2">Student Details:</legend>
+                    <label>First Name: <input type="text" name="first_name" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Last Name: <input type="text" name="last_name" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Date of Birth: <input type="date" name="dob" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Gender:
+                        <select name="gender" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label>Place of Birth: <input type="text" name="place_of_birth" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Class Name: <input type="text" name="class_name" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Previous School:
+                        <select name="previous_school" onchange="toggleSchoolName(this)" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </label>
+                    <label id="schoolNameLabel" style="display: none;">School Name: <input type="text"
+                            name="school_name" id="schoolName"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Allergies: <textarea name="allergies" rows="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></textarea></label>
+                    <label>Precautions: <textarea name="precautions" rows="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></textarea></label>
+                </fieldset>
+                <fieldset class="mb-4">
+                    <legend class="text-gray-700 font-bold mb-2">Father's Details:</legend>
+                    <label>Name: <input type="text" name="father_name" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Email ID: <input type="email" name="father_email" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Mobile: <input type="tel" name="father_mobile" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Qualification: <input type="text" name="father_qualification" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Occupation:
+                        <select name="father_occupation" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                            <option value="service">Service</option>
+                            <option value="self-employed">Self Employed</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset class="mb-4">
+                    <legend class="text-gray-700 font-bold mb-2">Mother's Details:</legend>
+                    <label>Name: <input type="text" name="mother_name" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Email ID: <input type="email" name="mother_email" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Mobile: <input type="tel" name="mother_mobile" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Qualification: <input type="text" name="mother_qualification" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Occupation: <input type="text" name="mother_occupation" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Office Name: <input type="text" name="mother_office_name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Office Address: <textarea name="mother_office_address" rows="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></textarea></label>
+                </fieldset>
+
+                <!-- Guardian Details -->
+                <fieldset class="mb-4">
+                    <legend class="text-gray-700 font-bold mb-2">Guardian's Details:</legend>
+                    <label>Name: <input type="text" name="guardian_name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Relationship with Child: <input type="text" name="guardian_relationship"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                    <label>Address: <textarea name="guardian_address" rows="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></textarea></label>
+                    <label>Mobile: <input type="tel" name="guardian_mobile"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"></label>
+                </fieldset>
+
+                <!-- Child Details -->
+                <div class="mb-4">
+                    <label for="child_photo" class="block text-gray-700 font-bold mb-2">Child's Photo:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="child_photo" name="child_photo"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="child_aadhar" class="block text-gray-700 font-bold mb-2">Child's Aadhar Card:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="child_aadhar" name="child_aadhar"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="child_birth_certificate" class="block text-gray-700 font-bold mb-2">Child's Birth
+                        Certificate:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="child_birth_certificate" name="child_birth_certificate"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Father's Details -->
+                <div class="mb-4">
+                    <label for="father_photo" class="block text-gray-700 font-bold mb-2">Father's Photo:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="father_photo" name="father_photo"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="father_aadhar" class="block text-gray-700 font-bold mb-2">Father's Aadhar Card:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="father_aadhar" name="father_aadhar"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Mother's Details -->
+                <div class="mb-4">
+                    <label for="mother_photo" class="block text-gray-700 font-bold mb-2">Mother's Photo:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="mother_photo" name="mother_photo"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="mother_aadhar" class="block text-gray-700 font-bold mb-2">Mother's Aadhar Card:</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="file" id="mother_aadhar" name="mother_aadhar"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register
+                        Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleSchoolName(selectElement) {
+            const schoolNameLabel = document.getElementById('schoolNameLabel');
+            const schoolNameInput = document.getElementById('schoolName');
+            if (selectElement.value === 'yes') {
+                schoolNameLabel.style.display = 'block';
+                schoolNameInput.required = true;
+            } else {
+                schoolNameLabel.style.display = 'none';
+                schoolNameInput.required = false;
+            }
+        }
+    </script>
+
+    {% include 'footer.html' %}
+</body>
+
+</html>

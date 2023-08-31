@@ -1,0 +1,6 @@
+Flask
+pymongo
+bcrypt
+flask_login
+flask_pymongo
+fpdf

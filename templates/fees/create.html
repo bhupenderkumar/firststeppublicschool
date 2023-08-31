@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Fee</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+<script src="{{ url_for('static', filename='create_fee_script.js') }}"></script>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <!-- {% if current_user.role == 'admin' or current_user.role == 'teacher' %} -->
+        <div class="container mx-auto h-screen flex justify-center items-center">
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col w-96">
+                <h1 class="text-3xl text-center mb-4">Create Fee</h1>
+                <form action="/fees/create" method="POST">
+                    <div class="mb-4">
+                        <label for="student_name" class="text-gray-700">Student Name</label>
+                        <input type="text" id="student_name" name="student_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" autocomplete="off">
+                        <input type="hidden" id="student_id" name="student_id">
+                        <div id="student_name_autocomplete"></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="class" class="text-gray-700">Class</label>
+                        <select id="class" name="class" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="Pre School">Pre School</option>
+                            <option value="Nursery">Nursery</option>
+                            <option value="L.K.G">L.K.G</option>
+                            <option value="U.K.G">U.K.G</option>
+                            {% for i in range(1,6) %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount" class="text-gray-700">Amount</label>
+                        <input type="number" id="amount" name="amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="due_date" class="text-gray-700">Due Date</label>
+                        <input type="date" id="due_date" name="due_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <button type="submit" class="mt-4 text-center">
+                        Create Fee
+                    </button>
+                </form>
+            </div>
+        <!-- {% else %} -->
+            <div class="container mx-auto h-screen flex justify-center items-center">
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col w-96">
+                    <h1 class="text-3xl text-center mb-4">Create Fee</h1>
+                    <p class="text-gray-700 text-center">You do not have permission to view this page.</p>
+                </div>
+            </div>
+        <!-- {% endif %} -->
+</div>
+    {% include 'footer.html' %}
+</body>
+
+</html>

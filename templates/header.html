@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Background Animation CSS */
+        @keyframes runAnimation {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 100% 0;
+            }
+        }
+
+       
+    </style>
+</head>
+
+<body>
+    <div class="header-2">
+        <nav class="bg-white py-2 md:py-4">
+            <div class="container px-4 mx-auto md:flex md:items-center">
+        
+              <div class="flex justify-between items-center">
+                <a href="/" class="font-bold text-xl text-indigo-600">
+                  <img src="/static/images/school_logo.jpeg" alt="First Step School" class="w-16 h-16 rounded-full">
+                  First Step School
+                </a>
+                <button class="border border-solid border-gray-600 px-3 py-1 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden" id="navbar-toggle">
+                  <i class="fas fa-bars"></i>
+                </button>
+              </div>
+        
+              <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
+                <a href="/" class="pp-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-home mr-2"></i> Home
+                </a>
+                <a href="/fees" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-dollar-sign mr-2"></i> Fees
+                </a>
+                <a href="/raise_grievance" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-bullhorn mr-2"></i> Raise Grievance
+                </a>
+                <a href="/syllabus" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-book-open mr-2"></i> Syllabus
+                </a>
+                <a href="/holiday-calendar" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i> Holiday Calendar
+                </a>
+                <a href="/activities-plan" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-tasks mr-2"></i> Activities Plan
+                </a>
+                <a href="/notifications" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="fas fa-bell mr-2"></i> Notification
+                </a>
+                <a href="/fetch_attendance" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                    <i class="far fa-calendar-check mr-2"></i> Attendance
+                </a>
+                {% if session.get('username') %}
+                <!-- If the user is logged in, display these links -->
+                <a href="/logout" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 rounded">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+                {% else %}
+                <!-- If the user is not logged in, display only these links -->
+                <a href="/login" class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </a>
+                <a href="/signup" class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-solid border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
+                    <i class="fas fa-user-plus mr-2"></i> Signup
+                </a>
+                {% endif %}
+            </div>
+            
+            </div>
+          </nav>
+        
+        
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mx-auto mt-4">
+        {% for category, message in messages %}
+        <div
+            class="alert {% if category == 'success' %} bg-green-500 {% elif category == 'danger' %} bg-red-500 {% endif %} text-white px-6 py-4 border-0 rounded relative mb-4">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let toggleBtn = document.querySelector("#navbar-toggle");
+        let collapse = document.querySelector("#navbar-collapse");
+
+        toggleBtn.onclick = () => {
+            collapse.classList.toggle("hidden");
+            collapse.classList.toggle("flex");
+        };
+
+        $("#profile-button").click(function () {
+            $("#profile-dropdown").toggle();
+        });
+        $(document).click(function (e) {
+            if (!$(e.target).is('#profile-button, #profile-button *')) {
+                $("#profile-dropdown").hide();
+            }
+        });
+    });
+
+
+
+
+</script>
+
+</html>

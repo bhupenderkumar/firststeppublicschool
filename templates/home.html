@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div class="container mx-auto  py-5 m-2">
+        <div class="flex flex-col justify-content-center">
+          <h1 class="text-3xl font-bold  m-2">Welcome to Our Educational Platform</h1>
+          <p class="text-lg m-2">Discover, learn, and connect with our community. Dive into the world of knowledge
+            and exploration. Join us today.</p>
+          {% if not session.get('username') %}
+            <a href="/login" class="mb-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <span class="mr-2">Login</span>
+              <i class="fas fa-user-plus ml-2"></i>
+            </a>
+
+          {% endif %}
+          <div class="flex flex-col md:flex-row items-center mb-4">
+              <img src="/static/images/consultant.png"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6" alt="Education Consultant's Photo">
+            <div class="ml-4 px-8 py-6">
+              <h2 class="text-xl font-semibold">Education Consultant</h2>
+                    <p class="text-justify mt-4">When I envisioned the inception of educational spaces, my dream was to
+                        create an environment where every child feels valued, heard, and inspired. Today, I am thrilled
+                        to witness that dream becoming a reality. As an education consultant, I'm consistently
+                        enthralled by the innovation, creativity, and passion that I encounter in these halls each day.
+                        Our dedication to excellence, both in academic pursuits and in nurturing strong character,
+                        propels us forward with unwavering determination. Let's continue to dream, learn, and aspire for
+                        greatness, hand in hand, as we shape the future of education together.
+                        .</p>
+                </div>
+            </div>
+
+          <!-- Principal Section -->
+          <div class="flex flex-col md:flex-row items-center mb-4">
+              <img src="/static/images/principal.jpeg"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6"  alt="Principal's Photo">
+            <div class="ml-4 px-8 py-6">
+              <h2 class="text-xl font-semibold">Principal's Message</h2>
+              <p class="text-justify mt-4">
+                In our esteemed institution, we believe in nurturing minds and souls. The principal aim of our educational
+                platform is not just the dissemination of knowledge but the holistic development of each student. We take
+                pride in our diverse community of learners and educators, coming together to forge the leaders of
+                tomorrow. Through dedication, commitment, and a continuous desire to improve, we ensure that every student
+                is equipped with the skills they need to face the ever-changing challenges of the 21st century. I invite
+                you to become a part of our journey, to witness the transformative power of education firsthand.
+              </p>
+            </div>
+          </div>
+      
+          <!-- Vice Principal Section -->
+          <div class="flex flex-col md:flex-row items-center mb-4">
+              <img src="/static/images/viceprincipal.jpeg"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6" alt="Vice Principal's Photo">
+            <div class="ml-4 px-8 py-6">
+              <h2 class="text-xl font-semibold">Vice Principal's Message</h2>
+              <p class="text-justify mt-4">
+                Education, at its core, is a beacon that illuminates the path of life. Here, we strive to light that beacon
+                for every student. As the Vice Principal, my goal is to support our vibrant community in its educational
+                journey. Our emphasis on collaborative learning, real-world application, and fostering a love for lifelong
+                learning ensures that our students are well-prepared for the world outside. I'm thrilled to see the incredible
+                accomplishments of our students and faculty, and I'm eager for what the future holds.
+              </p>
+            </div>
+          </div>
+      
+         
+
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>
