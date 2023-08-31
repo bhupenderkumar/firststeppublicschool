@@ -83,6 +83,8 @@ def signup():
             return render_template('signup.html',  classes=get_classes_from_db(), error="Username already exists!")
         # Extract other data from the form
         form_data = extract_data_from_form(request.form)
+        if 'confirm_password' in form_data:
+            form_data.pop('confirm_password')
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         user_data = {
             **form_data,
