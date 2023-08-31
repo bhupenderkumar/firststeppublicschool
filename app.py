@@ -1,5 +1,4 @@
-from datetime import date
-import datetime
+from datetime import datetime
 import time
 from bson import ObjectId
 from flask import Flask, Response, flash, jsonify, render_template, request, redirect, url_for, session
@@ -309,13 +308,10 @@ def holiday_calendar():
 def update_attendance(attendance_id):
     data = request.json  # Assuming the data is sent as JSON in the request body
     new_status = data.get('new_status')
-    
-    # Update the attendance record in the database
     updated_result = db.attendance.update_one(
         {'_id': ObjectId(attendance_id)},
         {'$set': {'status': new_status}}
     )
-    
     if updated_result.modified_count > 0:
         flash(f"Record updated succesfully ", 'success')
         return jsonify({'message': 'Attendance record updated successfully'})
@@ -324,7 +320,7 @@ def update_attendance(attendance_id):
         return jsonify({'message': 'No attendance record found for the given ID'})
 
 
-@app.route('/insert_attendance', methods=['GET', 'POST'])
+@app.route('/create_attendance', methods=['GET', 'POST'])
 def insert_attendance():
     if request.method == 'GET':
         return render_template('create_attendance.html', classes=get_classes_from_db())
@@ -335,8 +331,6 @@ def insert_attendance():
             date = request.form.get('date')
             status = request.form.get('status')
             remaining_fields = extract_data_from_form(request_form=request.form)
-
-            # Insert attendance records for each selected student
             for student_id in student_ids:
                 db.attendance.insert_one({
                     **remaining_fields,
@@ -346,7 +340,6 @@ def insert_attendance():
                     'date': date,
                     'status': status
                 })
-
             flash("Records inserted successfully", 'success')
             return render_template('create_attendance.html', classes=get_classes_from_db())
         except Exception as e:
@@ -420,10 +413,7 @@ def update_role(user_id):
     # If we're submitting the form to update the role
     if request.method == 'POST':
         new_role = request.form.get('role')
-        
-        # Update the role in the database
         db.students.update_one({"_id": user_id}, {"$set": {"role": new_role}})
-        
         flash(f"Role for {user['username']} updated successfully!", 'success')
         return redirect(url_for('dashboard'))
 
@@ -447,24 +437,39 @@ def download_fee_receipt(fee_id):
     response.headers['Content-Disposition'] = f'inline; filename=fee_receipt_{fee_id}.pdf'
     return response
 
+@app.route('/create_notification', methods=['POST', 'GET'])
+@login_required
+def create_notification():
+    classes = get_classes_from_db()
+    if request.method == 'POST':
+        class_name = request.form.get('class_name')
+        notification_text = request.form.get('notification_text')
+        student_id = session.get('user_id')
+        # Assuming you have a 'notifications' collection in your database
+        db.notifications.insert_one({
+            'class_name': class_name,
+            'notification_text': notification_text,
+            'student_id': student_id,
+            'date': datetime.now()
+        })
+        return redirect(url_for('notifications'))
+    else:
+        return render_template('create_notification.html', classes=classes)
+    
 @app.route('/notifications')
 @login_required
 def notifications():
     student_id = session.get('user_id')
     student_name = session.get('user_name')
-    
     # Fetch the class name associated with the student from the database
-    student_data = db.students.find_one({'student_id': student_id})
+    student_data = db.students.find_one({'_id': ObjectId(student_id)})
     class_name = student_data.get('class_name') if student_data else None
-    
     notifications_list = []
     if class_name:
         # Fetch all notifications related to the class
         notifications_list = list(db.notifications.find({'class_name': class_name}))
-    
     return render_template('notifications.html', notifications_list=notifications_list, student_name=student_name)
 
-from flask import abort
 
 @app.errorhandler(404)
 def not_found_error(error):
