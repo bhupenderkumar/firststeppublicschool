@@ -64,6 +64,14 @@ def extract_data_from_form(request_form, existing_data=None):
     for key in request_form.keys():
         data[key] = request_form.get(key) or (existing_data[key] if existing_data and key in existing_data else None)
     return data
+
+def extract_data_from_request(request_obj, exclude_keys=None):
+    data = {}
+    for key in request_obj.form.keys():
+        if not exclude_keys or key not in exclude_keys:
+            data[key] = request_obj.form[key]
+    return data
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -303,7 +311,7 @@ def syllabus():
 @app.route('/holiday-calendar')
 @login_required
 def holiday_calendar():
-    return render_template('holiday_calendar.html')
+    return render_templateextract_data_from_form('holiday_calendar.html')
 @app.route('/update_attendance/<attendance_id>', methods=['PUT'])
 def update_attendance(attendance_id):
     data = request.json  # Assuming the data is sent as JSON in the request body
@@ -416,6 +424,19 @@ def update_role(user_id):
         db.students.update_one({"_id": user_id}, {"$set": {"role": new_role}})
         flash(f"Role for {user['username']} updated successfully!", 'success')
         return redirect(url_for('dashboard'))
+
+@app.route("/create_fees", methods=["GET", "POST"])
+@login_required
+def create_fee():
+    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+    if request.method == "GET":
+        return render_template('create_fee.html', classes=classes)
+    fee_data = extract_data_from_request(request)
+    fee_data['fee_type'] = request.form.getlist('fee_type[]')
+    fee_data["collected_by"] = session["username"]
+    db.fees.insert_one(fee_data)
+    return redirect(url_for("create_fee"))
+
 
 def get_next_sequence(name):
     # First, check if the document exists

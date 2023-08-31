@@ -160,12 +160,9 @@ def create_fee():
     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
     if request.method == "GET":
         return render_template('create_fee.html', classes=classes)
-
     fee_data = extract_data_from_request(request)
     fee_data["collected_by"] = session["username"]
-
     db.fees.insert_one(fee_data)
-
     return redirect(url_for("create_fee"))
 
 @app.route('/')

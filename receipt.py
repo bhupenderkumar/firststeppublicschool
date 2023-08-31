@@ -49,8 +49,12 @@ class PDF(FPDF):
         pdf.ln(5)
         pdf.cell(95, 10, "Amount:", 0, 0, 'R')
         pdf.cell(0, 10, f"Rupees {data['amount']}", 0, 1, 'R')
-        pdf.draw_dotted_line(10, 60, 200, 60)
+        pdf.draw_dotted_line(10, 60, 200, 60
         pdf.ln(5)
+        if data['fee__type':
+            pdf.cell(95, 10, "Fees Content:", 0, 0, 'R')
+            pdf.cell(0, 10, f" {data['fee_type']}", 0, 1, 'R')
+            pdf.ln(5)
         pdf.cell(95, 10, "Total Amount:", 0, 0, 'R')
         pdf.cell(0, 10, f"Rupees {data['amount']}", 0, 1, 'R')
         pdf.output('fee_receipt.pdf', 'F')

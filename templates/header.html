@@ -63,13 +63,19 @@
                         class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
                         <i class="fas fa-calendar-alt mr-2"></i> Holiday Calendar
                     </a>
-                    <a href="/activities-plan" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                    <i class="fas fa-tasks mr-2"></i> Activities Plan
-                </a>
+                    <a href="/activities-plan"
+                        class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                        <i class="fas fa-tasks mr-2"></i> Activities Plan
+                    </a>
                     {% if session.get('user_role') == 'admin' %}
                     <a href="/create_notification"
                         class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
                         <i class="fas fa-bell mr-2"></i> Create Notification
+                    </a>
+
+                    <a href="/create_fees"
+                        class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                        <i class="fas fa-dollar-sign mr-2"></i> Create Fees
                     </a>
                     <a href="/create_attendance"
                         class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
