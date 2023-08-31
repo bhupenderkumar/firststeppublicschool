@@ -313,7 +313,8 @@ def syllabus():
 @app.route('/holiday-calendar')
 @login_required
 def holiday_calendar():
-    return render_templateextract_data_from_form('holiday_calendar.html')
+    return render_template('holiday_calendar.html')
+
 @app.route('/update_attendance/<attendance_id>', methods=['PUT'])
 def update_attendance(attendance_id):
     data = request.json  # Assuming the data is sent as JSON in the request body
