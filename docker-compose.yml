@@ -14,7 +14,7 @@ services:
       - FLASK_APP=app_admin.py
     depends_on:
       - mongodb
-    command: [ "flask", "run", "--host=0.0.0.0", "--port=5002" ]
+    command: [ "flask", "run", "--host=0.0.0.0", "--port=5002", "--debug=True" ]
     networks:
       - school2_shared_network
 
