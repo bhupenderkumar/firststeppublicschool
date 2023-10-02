@@ -16,23 +16,21 @@
     {% include 'header.html' %}
 
     <!-- Notifications List -->
-    <div class="container pt-8">
-        <div class="bg-white shadow-md rounded ">
-            <h1 class="text-3xl text-center mb-6">Your Notifications</h1>
-            
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h1 class="text-3xl text-center mb-6">Your Notifications</h1>
+        {% if notifications_list %}
+        <div class="overflow-x-auto">
             <table class="min-w-full bg-white shadow-md rounded">
                 <thead>
                     <tr>
-                        <th class="w-1/5 py-2">Notification ID</th>
-                        <th class="w-1/5 py-2">Class Name</th>
-                        <th class="w-1/5 py-2">Notification Text</th>
-                        <th class="w-1/5 py-2">Date</th>
+                        <th class="w-1/4 lg:w-1/5 py-2 px-3 text-left">Class Name</th>
+                        <th class="w-1/2 lg:w-1/5 py-2 px-3 text-left">Notification Details</th>
+                        <th class="w-1/4 lg:w-1/5 py-2 px-3 text-left">Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for notification in notifications %}
+                    {% for notification in notifications_list %}
                     <tr class="border-t">
-                        <td class="py-2 px-3">{{ notification.notification_id }}</td>
                         <td class="py-2 px-3">{{ notification.class_name }}</td>
                         <td class="py-2 px-3">{{ notification.notification_text }}</td>
                         <td class="py-2 px-3">{{ notification.date }}</td>
@@ -40,12 +38,13 @@
                     {% endfor %}
                 </tbody>
             </table>
-
-            {% if not notifications %}
-            <p class="mt-4 text-center">You have no notifications at the moment.</p>
-            {% endif %}
         </div>
+        {% else %}
+        <p class="mt-4 text-center">You have no notifications.</p>
+        {% endif %}
     </div>
+    
+    
 
     {% include 'footer.html' %}
 </body>

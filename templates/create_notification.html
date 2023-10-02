@@ -22,7 +22,7 @@
                     <select id="class_name" name="class_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                         <option value="">Select Class</option>
                         {% for class_name in classes %}
-                        <option value="{{ class_name }}">{{ class_name.class_name }}</option>
+                        <option value="{{ class_name }}">{{ class_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -37,34 +37,30 @@
             </form>
 
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h1 class="text-3xl text-center mb-6">Your Notification</h1>
-                <table class="min-w-full bg-white shadow-md rounded">
-                    <thead>
-                        <tr>
-                            <th class="w-1/5 py-2">Notification ID</th>
-                            <th class="w-1/5 py-2">Class Name</th>
-                            <th class="w-1/5 py-2">Notification Details</th>
-                            <th class="w-1/5 py-2">School Response</th>
-                            {% if is_admin %}
-                            <th class="w-1/5 py-2">Actions</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for grievance in grievances %}
-                        <tr class="border-t">
-                            <td class="py-2 px-3">{{ grievance.notification_id }}</td>
-                            <td class="py-2 px-3">{{ grievance.class_name }}</td>
-                            <td class="py-2 px-3">{{ grievance.notification_details }}</td>
-                            <td class="py-2 px-3">{{ grievance.school_response or "Awaiting response" }}</td>
-                           
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-    
-                {% if not grievances %}
-                <p class="mt-4 text-center">You have not raised any grievances yet.</p>
+                <h1 class="text-3xl text-center mb-6">Your Notifications</h1>
+                {% if notifications_list %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white shadow-md rounded">
+                        <thead>
+                            <tr>
+                                <th class="w-1/4 lg:w-1/5 py-2 px-3 text-left">Class Name</th>
+                                <th class="w-1/2 lg:w-1/5 py-2 px-3 text-left">Notification Details</th>
+                                <th class="w-1/4 lg:w-1/5 py-2 px-3 text-left">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for notification in notifications_list %}
+                            <tr class="border-t">
+                                <td class="py-2 px-3">{{ notification.class_name }}</td>
+                                <td class="py-2 px-3">{{ notification.notification_text }}</td>
+                                <td class="py-2 px-3">{{ notification.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="mt-4 text-center">You have no notifications.</p>
                 {% endif %}
             </div>
         </div>

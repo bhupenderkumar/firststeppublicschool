@@ -1,5 +1,4 @@
-from datetime import date
-import datetime
+from datetime import datetime
 import time
 from bson import ObjectId
 from flask import Flask, Response, flash, jsonify, render_template, request, redirect, url_for, session
@@ -61,155 +60,165 @@ def home():
     return render_template('home.html')
 
 def extract_data_from_form(request_form, existing_data=None):
-    data = {}
-    for key in request_form.keys():
-        data[key] = request_form.get(key) or (existing_data[key] if existing_data and key in existing_data else None)
-    return data
+    return {
+        key: request_form.get(key)
+        or (
+            existing_data[key]
+            if existing_data and key in existing_data
+            else None
+        )
+        for key in request_form.keys()
+    }
+
+def extract_data_from_request(request_obj, exclude_keys=None):
+    return {
+        key: request_obj.form[key]
+        for key in request_obj.form.keys()
+        if not exclude_keys or key not in exclude_keys
+    }
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']
-        existing_user = db.students.find_one({'username': username})
-        if existing_user:
-            return render_template('signup.html',  classes=get_classes_from_db(), error="Username already exists!")
-        # Extract other data from the form
-        form_data = extract_data_from_form(request.form)
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user_data = {
-            **form_data,
-            'username': username,
-            'password': hashed_password,
-            'role': role,
-            
-        }
-        db.students.insert_one(user_data)
-        return redirect(url_for('login'))
-    return render_template('signup.html', classes=get_classes_from_db())
+    if request.method != 'POST':
+        return render_template('signup.html', classes=get_classes_from_db())
+    username = request.form['username']
+    password = request.form['password']
+    role = request.form['role']
+    if existing_user := db.students.find_one({'username': username}):
+        return render_template('signup.html',  classes=get_classes_from_db(), error="Username already exists!")
+    # Extract other data from the form
+    form_data = extract_data_from_form(request.form)
+    if 'confirm_password' in form_data:
+        form_data.pop('confirm_password')
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    user_data = {
+        **form_data,
+        'username': username,
+        'password': hashed_password,
+        'role': role,
+
+    }
+    db.students.insert_one(user_data)
+    return redirect(url_for('login'))
 
 @app.route('/create-student', methods=['GET', 'POST'])
 def create_student():
-    if request.method == 'POST':
-        # Ensure the upload folder exists
-        if not os.path.exists(app.config['UPLOAD_FOLDER']):
-            os.makedirs(app.config['UPLOAD_FOLDER'])
-        # Extracting data from the form
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        date_of_birth = request.form['dob']  # Assuming you've named the DOB input field as 'dob'
-        # Generating username and password
-        username = date_of_birth  # Using DOB as the login id
-        password = f"{first_name}_{last_name}"  # Using first name and last name separated by an underscore
-        child_photo = request.files['child_photo']
-        child_aadhar = request.files['child_aadhar']
-        child_birth_certificate = request.files['child_birth_certificate']
-        father_photo = request.files['father_photo']
-        father_aadhar = request.files['father_aadhar']
-        mother_photo = request.files['mother_photo']
-        mother_aadhar = request.files['mother_aadhar']
-        # Save to file system for backup
-        filename_child_photo = secure_filename(child_photo.filename)
-        child_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_child_photo))
+    if request.method != 'POST':
+        return render_template('create_student.html')
+    # Ensure the upload folder exists
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    # Extracting data from the form
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    date_of_birth = request.form['dob']  # Assuming you've named the DOB input field as 'dob'
+    # Generating username and password
+    username = date_of_birth  # Using DOB as the login id
+    password = f"{first_name}_{last_name}"  # Using first name and last name separated by an underscore
+    child_photo = request.files['child_photo']
+    child_aadhar = request.files['child_aadhar']
+    child_birth_certificate = request.files['child_birth_certificate']
+    father_photo = request.files['father_photo']
+    father_aadhar = request.files['father_aadhar']
+    mother_photo = request.files['mother_photo']
+    mother_aadhar = request.files['mother_aadhar']
+    # Save to file system for backup
+    filename_child_photo = secure_filename(child_photo.filename)
+    child_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_child_photo))
 
-        filename_child_aadhar = secure_filename(child_aadhar.filename)
-        child_aadhar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_child_aadhar))
+    filename_child_aadhar = secure_filename(child_aadhar.filename)
+    child_aadhar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_child_aadhar))
 
-        filename_child_birth_certificate = secure_filename(child_birth_certificate.filename)
-        child_birth_certificate.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_child_birth_certificate))
+    filename_child_birth_certificate = secure_filename(child_birth_certificate.filename)
+    child_birth_certificate.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_child_birth_certificate))
 
-        filename_father_photo = secure_filename(father_photo.filename)
-        father_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_father_photo))
+    filename_father_photo = secure_filename(father_photo.filename)
+    father_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_father_photo))
 
-        filename_father_aadhar = secure_filename(father_aadhar.filename)
-        father_aadhar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_father_aadhar))
+    filename_father_aadhar = secure_filename(father_aadhar.filename)
+    father_aadhar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_father_aadhar))
 
-        filename_mother_photo = secure_filename(mother_photo.filename)
-        mother_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_mother_photo))
+    filename_mother_photo = secure_filename(mother_photo.filename)
+    mother_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_mother_photo))
 
-        filename_mother_aadhar = secure_filename(mother_aadhar.filename)
-        mother_aadhar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_mother_aadhar))
+    filename_mother_aadhar = secure_filename(mother_aadhar.filename)
+    mother_aadhar.save(os.path.join(app.config['UPLOAD_FOLDER'], filename_mother_aadhar))
 
-        # Save to MongoDB as BLOB
-        child_photo_id = fs.put(child_photo)
-        child_aadhar_id = fs.put(child_aadhar)
-        child_birth_certificate_id = fs.put(child_birth_certificate)
-        father_photo_id = fs.put(father_photo)
-        father_aadhar_id = fs.put(father_aadhar)
-        mother_photo_id = fs.put(mother_photo)
-        mother_aadhar_id = fs.put(mother_aadhar)
+    # Save to MongoDB as BLOB
+    child_photo_id = fs.put(child_photo)
+    child_aadhar_id = fs.put(child_aadhar)
+    child_birth_certificate_id = fs.put(child_birth_certificate)
+    father_photo_id = fs.put(father_photo)
+    father_aadhar_id = fs.put(father_aadhar)
+    mother_photo_id = fs.put(mother_photo)
+    mother_aadhar_id = fs.put(mother_aadhar)
 
-        existing_student = db.students.find_one({'username': username})
+    if existing_student := db.students.find_one({'username': username}):
+        return render_template('create_student.html', error="Student with this DOB already exists!")
 
-        if existing_student:
-            return render_template('create_student.html', error="Student with this DOB already exists!")
+    hashed_password = generate_password_hash(password)
 
-        hashed_password = generate_password_hash(password)
-         
-        # Store the student data
-        student_data = {
-            'username': username,
-            'password': hashed_password,
-            'first_name': first_name,
-            'last_name': last_name,
-            'gender': request.form['gender'],
-            'place_of_birth': request.form['place_of_birth'],
-            'father_name': request.form['father_name'],
-            'father_mobile': request.form['father_mobile'],
-            'father_email': request.form['father_email'],
-            'father_qualification': request.form['father_qualification'],
-            'father_occupation': request.form['father_occupation'],
-            'father_office_name': request.form['father_office_name'],
-            'father_office_address': request.form['father_office_address'],
-            'mother_name': request.form['mother_name'],
-            'mother_address': request.form['mother_address'],
-            'mother_mobile': request.form['mother_mobile'],
-            'mother_qualification': request.form['mother_qualification'],
-            'mother_office_name': request.form['mother_office_name'],
-            'mother_office_address': request.form['mother_office_address'],
-            'guardian_name': request.form['guardian_name'],
-            'guardian_relationship': request.form['guardian_relationship'],
-            'guardian_address': request.form['guardian_address'],
-            'guardian_mobile': request.form['guardian_mobile'],
-            'primary_contact_name': request.form['primary_contact_name'],
-            'primary_contact_relationship': request.form['primary_contact_relationship'],
-            'primary_contact_mobile': request.form['primary_contact_mobile'],
-            'emergency_contact': request.form['emergency_contact'],
-            'class_name': request.form['class_name'],
-            'previous_school': request.form['previous_school'] if 'previous_school' in request.form else None,
-            'allergies': request.form['allergies'] if 'allergies' in request.form else None,
-            'precautions': request.form['precautions'] if 'precautions' in request.form else None,
-            'child_photo_id': child_photo_id,
-            'child_aadhar_id': child_aadhar_id,
-            'child_birth_certificate_id': child_birth_certificate_id,
-            'father_photo_id': father_photo_id,
-            'father_aadhar_id': father_aadhar_id,
-            'mother_photo_id': mother_photo_id,
-            'mother_aadhar_id': mother_aadhar_id
-        }
+    # Store the student data
+    student_data = {
+        'username': username,
+        'password': hashed_password,
+        'first_name': first_name,
+        'last_name': last_name,
+        'gender': request.form['gender'],
+        'place_of_birth': request.form['place_of_birth'],
+        'father_name': request.form['father_name'],
+        'father_mobile': request.form['father_mobile'],
+        'father_email': request.form['father_email'],
+        'father_qualification': request.form['father_qualification'],
+        'father_occupation': request.form['father_occupation'],
+        'father_office_name': request.form['father_office_name'],
+        'father_office_address': request.form['father_office_address'],
+        'mother_name': request.form['mother_name'],
+        'mother_address': request.form['mother_address'],
+        'mother_mobile': request.form['mother_mobile'],
+        'mother_qualification': request.form['mother_qualification'],
+        'mother_office_name': request.form['mother_office_name'],
+        'mother_office_address': request.form['mother_office_address'],
+        'guardian_name': request.form['guardian_name'],
+        'guardian_relationship': request.form['guardian_relationship'],
+        'guardian_address': request.form['guardian_address'],
+        'guardian_mobile': request.form['guardian_mobile'],
+        'primary_contact_name': request.form['primary_contact_name'],
+        'primary_contact_relationship': request.form['primary_contact_relationship'],
+        'primary_contact_mobile': request.form['primary_contact_mobile'],
+        'emergency_contact': request.form['emergency_contact'],
+        'class_name': request.form['class_name'],
+        'previous_school': request.form['previous_school'] if 'previous_school' in request.form else None,
+        'allergies': request.form['allergies'] if 'allergies' in request.form else None,
+        'precautions': request.form['precautions'] if 'precautions' in request.form else None,
+        'child_photo_id': child_photo_id,
+        'child_aadhar_id': child_aadhar_id,
+        'child_birth_certificate_id': child_birth_certificate_id,
+        'father_photo_id': father_photo_id,
+        'father_aadhar_id': father_aadhar_id,
+        'mother_photo_id': mother_photo_id,
+        'mother_aadhar_id': mother_aadhar_id
+    }
 
-        db.students.insert_one(student_data)
+    db.students.insert_one(student_data)
 
-        return redirect(url_for('dashboard'))
-
-    return render_template('create_student.html')
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = db.students.find_one({'username': username})
-        if user and verify_password(user['password'], password):
-            session['user_id'] = str(user['_id'])
-            session['user_role'] = user['role']
-            session['username'] = user['username']
-            return redirect(url_for('dashboard'))
+    if request.method != 'POST':
+        return render_template('login.html')
+    username = request.form['username']
+    password = request.form['password']
+    user = db.students.find_one({'username': username})
+    if user and verify_password(user['password'], password):
+        session['user_id'] = str(user['_id'])
+        session['user_role'] = user['role']
+        session['username'] = user['username']
+        return redirect(url_for('dashboard'))
 
-        return render_template('login.html', error="Invalid username or password")
-
-    return render_template('login.html')
+    return render_template('login.html', error="Invalid username or password")
 
 @app.route('/dashboard')
 @login_required
@@ -267,14 +276,13 @@ def serve_media(folder_name, filename):
 def get_classes_from_db():
     classes_collection = mongo.db.classes  # Assuming your collection is named 'classes'
     all_classes = classes_collection.find()
-    class_names = [cls['name'] for cls in all_classes]
-    return class_names
+    return [cls['name'] for cls in all_classes]
 
 
 def initialize_classes():
-    default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]    
     # If the classes collection is empty, add the default classes
     if mongo.db.classes.count_documents({}) == 0:
+        default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]
         for cls in default_classes:
             mongo.db.classes.insert_one({"name": cls})
     if not db.counters.find_one({"_id": "grievance"}):
@@ -305,26 +313,24 @@ def syllabus():
 @login_required
 def holiday_calendar():
     return render_template('holiday_calendar.html')
+
 @app.route('/update_attendance/<attendance_id>', methods=['PUT'])
 def update_attendance(attendance_id):
     data = request.json  # Assuming the data is sent as JSON in the request body
     new_status = data.get('new_status')
-    
-    # Update the attendance record in the database
     updated_result = db.attendance.update_one(
         {'_id': ObjectId(attendance_id)},
         {'$set': {'status': new_status}}
     )
-    
     if updated_result.modified_count > 0:
-        flash(f"Record updated succesfully ", 'success')
+        flash("Record updated succesfully ", 'success')
         return jsonify({'message': 'Attendance record updated successfully'})
     else:
-        flash(f"Error please check the request or contact admin dept  ", 'dangeer')
+        flash("Error please check the request or contact admin dept  ", 'dangeer')
         return jsonify({'message': 'No attendance record found for the given ID'})
 
 
-@app.route('/insert_attendance', methods=['GET', 'POST'])
+@app.route('/create_attendance', methods=['GET', 'POST'])
 def insert_attendance():
     if request.method == 'GET':
         return render_template('create_attendance.html', classes=get_classes_from_db())
@@ -335,8 +341,6 @@ def insert_attendance():
             date = request.form.get('date')
             status = request.form.get('status')
             remaining_fields = extract_data_from_form(request_form=request.form)
-
-            # Insert attendance records for each selected student
             for student_id in student_ids:
                 db.attendance.insert_one({
                     **remaining_fields,
@@ -346,11 +350,10 @@ def insert_attendance():
                     'date': date,
                     'status': status
                 })
-
             flash("Records inserted successfully", 'success')
             return render_template('create_attendance.html', classes=get_classes_from_db())
         except Exception as e:
-            flash("Error inserting records: " + str(e), 'error')
+            flash(f"Error inserting records: {str(e)}", 'error')
             return render_template('create_attendance.html', classes=get_classes_from_db())
 
 if __name__ == '__main__':
@@ -365,17 +368,18 @@ def fetch_attendance():
             return render_template('error.html', message='User not found'), 404
         user = db.students.find_one({'_id': ObjectId(user_id)})
         if user is None:
-            flash("User not found with user id: " + user_id, "danger")
+            flash(f"User not found with user id: {user_id}", "danger")
             return render_template('error.html', message='User not found'), 404
         class_name = user.get('class_name')
-        
+
         attendance = db.attendance.find({'class_name': class_name, 'user_id': user_id})
-        attendance_data = []
-        for entry in attendance:
-            attendance_data.append({
+        attendance_data = [
+            {
                 'attendance_date': entry['attendance_date'],
-                'status': entry['status']
-            })
+                'status': entry['status'],
+            }
+            for entry in attendance
+        ]
         student_name = user.get('username')  # Use 'username' instead of 'user_name'
         return render_template('attendance.html', attendance_data=attendance_data, student_name=student_name)
     except Exception as e:
@@ -420,17 +424,25 @@ def update_role(user_id):
     # If we're submitting the form to update the role
     if request.method == 'POST':
         new_role = request.form.get('role')
-        
-        # Update the role in the database
         db.students.update_one({"_id": user_id}, {"$set": {"role": new_role}})
-        
         flash(f"Role for {user['username']} updated successfully!", 'success')
         return redirect(url_for('dashboard'))
 
+@app.route("/create_fees", methods=["GET", "POST"])
+@login_required
+def create_fee():
+    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+    if request.method == "GET":
+        return render_template('create_fee.html', classes=classes)
+    fee_data = extract_data_from_request(request)
+    fee_data['fee_type'] = request.form.getlist('fee_type[]')
+    fee_data["collected_by"] = session["username"]
+    db.fees.insert_one(fee_data)
+    return redirect(url_for("create_fee"))
+
+
 def get_next_sequence(name):
-    # First, check if the document exists
-    counter_doc = db.counters.find_one({"_id": name})
-    if counter_doc:
+    if counter_doc := db.counters.find_one({"_id": name}):
         return int(int(counter_doc["count"]) + 1)
     else:
         return 1;
@@ -447,24 +459,38 @@ def download_fee_receipt(fee_id):
     response.headers['Content-Disposition'] = f'inline; filename=fee_receipt_{fee_id}.pdf'
     return response
 
+@app.route('/create_notification', methods=['POST', 'GET'])
+@login_required
+def create_notification():
+    classes = get_classes_from_db()
+    if request.method != 'POST':
+        return render_template('create_notification.html', classes=classes)
+    class_name = request.form.get('class_name')
+    notification_text = request.form.get('notification_text')
+    student_id = session.get('user_id')
+    # Assuming you have a 'notifications' collection in your database
+    db.notifications.insert_one({
+        'class_name': class_name,
+        'notification_text': notification_text,
+        'student_id': student_id,
+        'date': datetime.now()
+    })
+    return redirect(url_for('notifications'))
+    
 @app.route('/notifications')
 @login_required
 def notifications():
     student_id = session.get('user_id')
     student_name = session.get('user_name')
-    
     # Fetch the class name associated with the student from the database
-    student_data = db.students.find_one({'student_id': student_id})
+    student_data = db.students.find_one({'_id': ObjectId(student_id)})
     class_name = student_data.get('class_name') if student_data else None
-    
     notifications_list = []
     if class_name:
         # Fetch all notifications related to the class
         notifications_list = list(db.notifications.find({'class_name': class_name}))
-    
     return render_template('notifications.html', notifications_list=notifications_list, student_name=student_name)
 
-from flask import abort
 
 @app.errorhandler(404)
 def not_found_error(error):

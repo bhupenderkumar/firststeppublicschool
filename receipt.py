@@ -21,21 +21,23 @@ class PDF(FPDF):
         self.set_y(-30)  # Adjusting the y-position to make space for the new line
         self.set_font('Arial', 'I', 8)
         self.cell(0, 10, 'This is a computer-generated print', 0, 1, 'C')
-        self.cell(0, 10, 'Page ' + str(self.page_no()), 0, 0, 'C')
+        self.cell(0, 10, f'Page {str(self.page_no())}', 0, 0, 'C')
 
 
     def draw_dotted_line(self, x1, y1, x2, y2):
         self.line(x1, y1, x2, y2)
 
-    def create_receipt(data):
+    def create_receipt(self):
         pdf = PDF()
         pdf.add_page()
         pdf.set_font('Arial', 'B', 14)
         pdf.cell(0, 10, 'Fee Receipt', 0, 1, 'C')
         pdf.ln(10)
         pdf.set_font('Arial', '', 12)
-        month = datetime.datetime.strptime(data["submit_date"], "%Y-%m-%d").strftime("%B")
-        for key, value in data.items():
+        month = datetime.datetime.strptime(
+            self["submit_date"], "%Y-%m-%d"
+        ).strftime("%B")
+        for key, value in self.items():
             if key == "_id":  # Skip the _id field
                 continue
             if key == "submit_date":  # Convert the date to month
@@ -48,9 +50,15 @@ class PDF(FPDF):
         pdf.draw_dotted_line(10, 50, 200, 50)
         pdf.ln(5)
         pdf.cell(95, 10, "Amount:", 0, 0, 'R')
-        pdf.cell(0, 10, f"Rupees {data['amount']}", 0, 1, 'R')
+        pdf.cell(0, 10, f"Rupees {self['amount']}", 0, 1, 'R')
         pdf.draw_dotted_line(10, 60, 200, 60)
         pdf.ln(5)
+
+        if 'fee_type' in self:
+            pdf.cell(95, 10, "Fees Content:", 0, 0, 'R')
+            pdf.cell(0, 10, f" {self['fee_type']}", 0, 1, 'R')
+            pdf.ln(5)
+
         pdf.cell(95, 10, "Total Amount:", 0, 0, 'R')
-        pdf.cell(0, 10, f"Rupees {data['amount']}", 0, 1, 'R')
+        pdf.cell(0, 10, f"Rupees {self['amount']}", 0, 1, 'R')
         pdf.output('fee_receipt.pdf', 'F')

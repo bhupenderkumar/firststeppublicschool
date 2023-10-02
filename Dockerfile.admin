@@ -1,7 +1,7 @@
 FROM python:3.9
 WORKDIR /app_admin
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
 COPY app_admin.py /app_admin.py
 COPY . . 
 EXPOSE 5002
