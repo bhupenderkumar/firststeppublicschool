@@ -70,27 +70,26 @@ def logout():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']
-        existing_user = db.students.find_one({'username': username})
-        if existing_user:
-            return render_template('signup.html', error="Username already exists!")
-        # Extract other data from the form
-        form_data = extract_data_from_form(request.form)
-        # Hash the password
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        # Combine data for insertion into the database
-        user_data = {
-            'username': username,
-            'password': hashed_password,
-            'role': role,
-            **form_data
-        }
-        db.students.insert_one(user_data)
-        return redirect(url_for('login'))
-    return render_template('signup.html', classes=get_classes_from_db())
+    if request.method != 'POST':
+        return render_template('signup.html', classes=get_classes_from_db())
+    username = request.form['username']
+    password = request.form['password']
+    role = request.form['role']
+    if existing_user := db.students.find_one({'username': username}):
+        return render_template('signup.html', error="Username already exists!")
+    # Extract other data from the form
+    form_data = extract_data_from_form(request.form)
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    # Combine data for insertion into the database
+    user_data = {
+        'username': username,
+        'password': hashed_password,
+        'role': role,
+        **form_data
+    }
+    db.students.insert_one(user_data)
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -148,11 +147,11 @@ def answer_grievance():
     return render_template('answer_grievance.html', grievances=grievances)
  
 def extract_data_from_request(request_obj, exclude_keys=None):
-    data = {}
-    for key in request_obj.form.keys():
-        if not exclude_keys or key not in exclude_keys:
-            data[key] = request_obj.form[key]
-    return data
+    return {
+        key: request_obj.form[key]
+        for key in request_obj.form.keys()
+        if not exclude_keys or key not in exclude_keys
+    }
 
 @app.route("/fees", methods=["GET", "POST"])
 @login_required
@@ -171,9 +170,7 @@ def home():
 
 
 def get_next_sequence(name):
-    # First, check if the document exists
-    counter_doc = db.counters.find_one({"_id": name})
-    if counter_doc:
+    if counter_doc := db.counters.find_one({"_id": name}):
         db.counters.update_one({"_id": name}, {"$inc": {"count": 1}})
         return int(int(counter_doc["count"]) + 1)
     else:
@@ -236,11 +233,10 @@ def get_students(class_name):
 
 def fetch_students_from_db(class_name):
     students_query = db.students.find({'class_name': class_name})
-    students_list = [
+    return [
         {"username": student["username"], "_id": str(student["_id"])}
         for student in students_query
     ]
-    return students_list
 @app.route("/respond_grievance/<int:grievance_id>", methods=["POST"])
 @login_required
 def respond_grievance(grievance_id):
