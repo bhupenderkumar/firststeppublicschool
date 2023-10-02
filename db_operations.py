@@ -29,10 +29,9 @@ def update_grievance_response(grievance_id, response_text):
     )
     return result.matched_count > 0
 def get_classes_from_db():
-    classes_collection = db.classes
-    all_classes = classes_collection.find()
-    class_names = [cls['name'] for cls in all_classes]
-    return class_names
+   classes_collection = db.classes
+   all_classes = classes_collection.find()
+   return [cls['name'] for cls in all_classes]
 
 def add_grievance(grievance):
     db.grievances.insert_one(grievance)
@@ -67,24 +66,24 @@ def save_updated_student_data(student_id, updated_data):
     db.students.update_one({'_id': student_id}, {'$set': updated_data})
 
 def fetch_students_from_db(class_name):
-    students_query = db.students.find({'class_name': class_name}, {'username': 1, "_id": 1, 'fathername': 1})
-    students_list = [
-        {"username": student["username"], "_id": str(student["_id"]), 'fathername': student['fathername']}
-        for student in students_query
-    ]
-    return students_list
+   students_query = db.students.find({'class_name': class_name}, {'username': 1, "_id": 1, 'fathername': 1})
+   return [{
+       "username": student["username"],
+       "_id": str(student["_id"]),
+       'fathername': student['fathername'],
+   } for student in students_query]
 
 def initialize_classes():
-    default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]    
     # If the classes collection is empty, add the default classes
-    if db.classes.count_documents({}) == 0:
-        for cls in default_classes:
-            db.classes.insert_one({"name": cls})
-    if not db.counters.find_one({"_id": "grievance"}):
-        db.counters.insert_one({
-            "_id": "grievance",
-            "count": 0
-        })
-    else:
-        print("Counter for 'grievance' already exists.")
+   if db.classes.count_documents({}) == 0:
+      default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]
+      for cls in default_classes:
+          db.classes.insert_one({"name": cls})
+   if not db.counters.find_one({"_id": "grievance"}):
+       db.counters.insert_one({
+           "_id": "grievance",
+           "count": 0
+       })
+   else:
+       print("Counter for 'grievance' already exists.")
 

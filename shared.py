@@ -15,11 +15,11 @@ def allowed_file(filename):
 
 
 def extract_data_from_request(request_obj, exclude_keys=None):
-    data = {}
-    for key in request_obj.form.keys():
-        if not exclude_keys or key not in exclude_keys:
-            data[key] = request_obj.form[key]
-    return data
+    return {
+        key: request_obj.form[key]
+        for key in request_obj.form.keys()
+        if not exclude_keys or key not in exclude_keys
+    }
 
 def handle_file_uploads(request_files, existing_data=None):
     file_data = {}
@@ -47,10 +47,15 @@ def holiday_calendar():
     return render_template('holiday_calendar.html')
 
 def extract_data_from_form(request_form, existing_data=None):
-    data = {}
-    for key in request_form.keys():
-        data[key] = request_form.get(key) or (existing_data[key] if existing_data and key in existing_data else None)
-    return data
+    return {
+        key: request_form.get(key)
+        or (
+            existing_data[key]
+            if existing_data and key in existing_data
+            else None
+        )
+        for key in request_form.keys()
+    }
 
 
     
@@ -65,8 +70,8 @@ def login():
         if user and verify_password(user['password'], password):
             session['user_id'] = str(user['_id'])
             session['role'] = user['role']
-            session['username'] = user['username'] 
-            flash(str(user) + ' ' + str(str(user['_id'])), 'danger')
+            session['username'] = user['username']
+            flash(f'{str(user)} ' + str(user['_id']), 'danger')
             return redirect(url_for('dashboard'))
         return render_template('login.html', error="Invalid username or password")
     return render_template('login.html')
@@ -74,25 +79,24 @@ def login():
 
 @shared_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']
-        existing_user = db.students.find_one({'username': username})
-        if existing_user:
-            return render_template('signup.html', error="Username already exists!")
-        # Extract other data from the form
-        form_data = extract_data_from_form(request.form)
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user_data = {
-            'username': username,
-            'password': hashed_password,
-            'role': role,
-            **form_data
-        }
-        db.students.insert_one(user_data)
-        return redirect(url_for('login'))
-    return render_template('signup.html', classes=get_classes_from_db())
+    if request.method != 'POST':
+        return render_template('signup.html', classes=get_classes_from_db())
+    username = request.form['username']
+    password = request.form['password']
+    role = request.form['role']
+    if existing_user := db.students.find_one({'username': username}):
+        return render_template('signup.html', error="Username already exists!")
+    # Extract other data from the form
+    form_data = extract_data_from_form(request.form)
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    user_data = {
+        'username': username,
+        'password': hashed_password,
+        'role': role,
+        **form_data
+    }
+    db.students.insert_one(user_data)
+    return redirect(url_for('login'))
 
 
 
@@ -113,9 +117,7 @@ def edit_profile():
         return render_template('home.html')
     return render_template('edit_profile.html', admin=user)
 def get_next_sequence(name):
-    # First, check if the document exists
-    counter_doc = db.counters.find_one({"_id": name})
-    if counter_doc:
+    if counter_doc := db.counters.find_one({"_id": name}):
         db.counters.update_one({"_id": name}, {"$inc": {"count": 1}})
         return int(int(counter_doc["count"]) + 1)
     else:
