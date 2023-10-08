@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fees</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
@@ -14,7 +12,7 @@
     {% include 'header.html' %}
     <div>
         <div>
-          <div class="bg-white shadow-md rounded">
+          <div class="mt-10">
             <h1 class="text-3xl text-center mb-4">Fees</h1>
             {% if fees_list|length > 0 %}
               <div class="overflow-x-auto">

@@ -7,7 +7,6 @@ import bcrypt
 import os
 from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
-
 from receipt import PDF
 app = Flask(__name__)
 from gridfs import GridFS
@@ -207,25 +206,25 @@ def create_student():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method != 'POST':
-        return render_template('login.html')
-    username = request.form['username']
-    password = request.form['password']
-    user = db.students.find_one({'username': username})
-    if user and verify_password(user['password'], password):
-        session['user_id'] = str(user['_id'])
-        session['user_role'] = user['role']
-        session['username'] = user['username']
-        return redirect(url_for('dashboard'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = db.students.find_one({'username': username})
+        if user and verify_password(user['password'], password):
+            session['user_id'] = str(user['_id'])
+            session['user_role'] = user['role']
+            session['username'] = user['username']
+            return redirect(url_for('dashboard'))
 
-    return render_template('login.html', error="Invalid username or password")
+        return render_template('login.html', error="Invalid username or password")
+
+    return render_template('login.html')
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
     user = load_user(session['user_id'])
     role = user['role']
     template_map = {
@@ -233,10 +232,7 @@ def dashboard():
         'admin': 'admin_dashboard.html',
         'parents': 'parents_dashboard.html'
     }
-
     return render_template(template_map.get(role, 'dashboard.html'), username=user['username'])
-
-
 
 
 MEDIA_FOLDER = './media'  # Assuming your folder name is 'media' in the current directory
@@ -251,6 +247,12 @@ def list_media_folders():
     # List all folders in the MEDIA_FOLDER
     folders = [f for f in os.listdir(MEDIA_FOLDER) if os.path.isdir(os.path.join(MEDIA_FOLDER, f))]
     return jsonify({'folders': folders})
+# Activities Plan page
+
+@app.route('/activities-plan')
+@login_required
+def activities_plan():
+    return render_template('activities_plan.html')
 
 @app.route('/list-media/<folder_name>')
 def list_media_in_folder(folder_name):
@@ -258,14 +260,9 @@ def list_media_in_folder(folder_name):
     
     if not os.path.exists(folder_path):
         return jsonify({'error': 'Folder not found'}), 404
-
-    # List all files in the specified folder
     files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-    
-    # Separate images and videos based on file extensions. 
     images = [f for f in files if f.endswith(('.png', '.jpg', '.jpeg'))]
     videos = [f for f in files if f.endswith(('.mp4', '.avi', '.mkv'))]
-
     return jsonify({'images': images, 'videos': videos})
 
 @app.route('/media/<folder_name>/<path:filename>')
@@ -280,6 +277,7 @@ def get_classes_from_db():
 
 
 def initialize_classes():
+    default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]    
     # If the classes collection is empty, add the default classes
     if mongo.db.classes.count_documents({}) == 0:
         default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]
@@ -292,8 +290,6 @@ def initialize_classes():
         })
     else:
         print("Counter for 'grievance' already exists.")
-
-# One-time initialization
 initialize_classes()
 
 @app.route('/logout')
@@ -301,14 +297,12 @@ def logout():
     session.clear()
     return redirect('/')
 
-
-# Syllabus page
 @app.route('/syllabus')
 @login_required
 def syllabus():
     return render_template('syllabus.html')
 
-# Holiday Calendar page
+
 @app.route('/holiday-calendar')
 @login_required
 def holiday_calendar():
@@ -323,10 +317,10 @@ def update_attendance(attendance_id):
         {'$set': {'status': new_status}}
     )
     if updated_result.modified_count > 0:
-        flash("Record updated succesfully ", 'success')
+        flash(f"Record updated succesfully ", 'success')
         return jsonify({'message': 'Attendance record updated successfully'})
     else:
-        flash("Error please check the request or contact admin dept  ", 'dangeer')
+        flash(f"Error please check the request or contact admin dept  ", 'dangeer')
         return jsonify({'message': 'No attendance record found for the given ID'})
 
 
@@ -353,11 +347,9 @@ def insert_attendance():
             flash("Records inserted successfully", 'success')
             return render_template('create_attendance.html', classes=get_classes_from_db())
         except Exception as e:
-            flash(f"Error inserting records: {str(e)}", 'error')
+            flash("Error inserting records: " + str(e), 'error')
             return render_template('create_attendance.html', classes=get_classes_from_db())
 
-if __name__ == '__main__':
-    app.run(debug=True)
 
 @app.route('/fetch_attendance', methods=['GET'])
 def fetch_attendance():
@@ -385,23 +377,7 @@ def fetch_attendance():
     except Exception as e:
         return render_template('error.html', message=str(e)), 500
 
-# Activities Plan page
-@app.route('/activities-plan')
-@login_required
-def activities_plan():
-    return render_template('activities_plan.html')
 
-@app.route('/user/deactivate/<string:user_id>', methods=['POST'])
-@login_required
-def deactivate_user(user_id):
-    # Ensure only admins can access this route
-    if session.get('user_role') != 'admin':
-        return redirect(url_for('dashboard'), "You don't have permission to access this page!")
-
-    # Update the user's is_active status
-    db.students.update_one({"_id": user_id}, {"$set": {"is_active": False}})
-
-    return redirect(url_for('admin_dashboard'), "User has been deactivated!")
 
 
 @app.route('/user/update-role/<user_id>', methods=['GET', 'POST'])
@@ -411,8 +387,6 @@ def update_role(user_id):
     if current_user.role != 'admin':
         flash('You do not have permission to update user roles.', 'danger')
         return redirect(url_for('dashboard'))
-
-    # If we're accessing the page to render the form
     if request.method == 'GET':
         user = db.students.find_one({"_id": user_id})
         if not user:
@@ -420,29 +394,16 @@ def update_role(user_id):
             return redirect(url_for('dashboard'))
         
         return render_template('update-role.html', user=user)
-
-    # If we're submitting the form to update the role
     if request.method == 'POST':
         new_role = request.form.get('role')
         db.students.update_one({"_id": user_id}, {"$set": {"role": new_role}})
         flash(f"Role for {user['username']} updated successfully!", 'success')
         return redirect(url_for('dashboard'))
 
-@app.route("/create_fees", methods=["GET", "POST"])
-@login_required
-def create_fee():
-    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-    if request.method == "GET":
-        return render_template('create_fee.html', classes=classes)
-    fee_data = extract_data_from_request(request)
-    fee_data['fee_type'] = request.form.getlist('fee_type[]')
-    fee_data["collected_by"] = session["username"]
-    db.fees.insert_one(fee_data)
-    return redirect(url_for("create_fee"))
-
-
 def get_next_sequence(name):
-    if counter_doc := db.counters.find_one({"_id": name}):
+    # First, check if the document exists
+    counter_doc = db.counters.find_one({"_id": name})
+    if counter_doc:
         return int(int(counter_doc["count"]) + 1)
     else:
         return 1;
@@ -463,19 +424,20 @@ def download_fee_receipt(fee_id):
 @login_required
 def create_notification():
     classes = get_classes_from_db()
-    if request.method != 'POST':
+    if request.method == 'POST':
+        class_name = request.form.get('class_name')
+        notification_text = request.form.get('notification_text')
+        student_id = session.get('user_id')
+        # Assuming you have a 'notifications' collection in your database
+        db.notifications.insert_one({
+            'class_name': class_name,
+            'notification_text': notification_text,
+            'student_id': student_id,
+            'date': datetime.now()
+        })
+        return redirect(url_for('notifications'))
+    else:
         return render_template('create_notification.html', classes=classes)
-    class_name = request.form.get('class_name')
-    notification_text = request.form.get('notification_text')
-    student_id = session.get('user_id')
-    # Assuming you have a 'notifications' collection in your database
-    db.notifications.insert_one({
-        'class_name': class_name,
-        'notification_text': notification_text,
-        'student_id': student_id,
-        'date': datetime.now()
-    })
-    return redirect(url_for('notifications'))
     
 @app.route('/notifications')
 @login_required
@@ -496,15 +458,6 @@ def notifications():
 def not_found_error(error):
     return render_template('404.html'), 404
 
-@app.route('/fees')
-@login_required
-def fees():
-    student_id = session.get('user_id')
-    fees_list = []
-    student_name = session.get('user_name')
-    # If the role is either 'admin' or 'parents'
-    fees_list = list(db.fees.find({'student_id': student_id}))
-    return render_template('fees.html', fees_list=fees_list, student_name=student_name)
 
 @app.route('/get-students/<class_name>')
 def get_students(class_name):
@@ -515,41 +468,6 @@ def get_students(class_name):
     ]
     return jsonify(students_list)
 
-@app.route("/raise_grievance", methods=["GET", "POST"])
-@login_required
-def raise_grievance():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    user_id = session['user_id']
-    grievances = list(db.grievances.find({"user_id": user_id}))
-    # Check if user_id is in session
-    # Handle the POST request (when a new grievance is raised)
-    if request.method == "POST":
-        # Extract grievance data from the form
-        grievance_text = request.form["grievance_details"]  # replace "grievance_text" with the name attribute of your form field
-        # Create a grievance dictionary
-        grievance = { 
-            'grievance_id':get_next_sequence("grievance"),
-            'class_name':request.form['class_name'],
-            'school_response':'',
-            'user_id':user_id,
-            'grievance_text': grievance_text,
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')  # Storing the time the grievance was raised
-        }
-        # Insert the grievance into the MongoDB collection
-        db.grievances.insert_one(grievance)
-        # Optionally, you can give a flash message to inform the user that their grievance was recorded.
-        flash('Your grievance has been recorded!', 'success')
-        
-        classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-        return render_template('raise_grievance.html', classes=classes,grievances=grievances)
-
-    # Handle the GET request (when the page is initially loaded or refreshed)
-    else:
-        grievances = list(db.grievances.find({"user_id": user_id}))
-        classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-        return render_template('raise_grievance.html', grievances=grievances,  classes=classes)
-
 @app.route('/fees-form')
 def fees_form():
     classes = mongo.db.classes.find()  # Assuming you have a collection of classes
@@ -558,48 +476,21 @@ def fees_form():
 
 @app.route('/students')
 @login_required
-
 def students():
     if session.get('user_role') == 'admin':
         students = db.students.find()
         return render_template('students.html', students=students)
     return redirect(url_for('dashboard'))
 
-@app.route('/teachers')
-@login_required
 
-def teachers():
-    if session.get('user_role') == 'admin':
-        teachers = db.teachers.find()
-        return render_template('teachers.html', teachers=teachers)
-    return redirect(url_for('dashboard'))
 
 @app.route('/grades')
 @login_required
-
 def grades():
     if session.get('user_role') == 'admin':
         grades = db.grades.find()
         return render_template('grades.html', grades=grades)
     return redirect(url_for('dashboard'))
-
-
-@app.route('/edit_student/<student_id>', methods=['GET', 'POST'])
-@login_required
-def edit_student(student_id):
-    student = db.students.find_one({'student_id': student_id})
-
-    if request.method == 'POST':
-        student_name = request.form['student_name']
-        class_id = request.form['class_id']
-
-        db.students.update_one({'student_id': student_id}, {'$set': {
-            'student_name': student_name,
-            'class_id': class_id
-        }})
-        return redirect(url_for('students'))
-
-    return render_template('edit_student.html', student=student)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000,debug= True)

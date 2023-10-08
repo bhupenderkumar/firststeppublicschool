@@ -1,6 +1,6 @@
-Flask
-pymongo
-bcrypt
-flask_login
-flask_pymongo
-fpdf
+ Flask==2.1.1
+ pymongo==3.12.1
+ bcrypt==3.2.0
+ Flask-Login==0.6.2
+ Flask-PyMongo==2.3.0
+ fpdf==1.7.2

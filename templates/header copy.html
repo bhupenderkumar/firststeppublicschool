@@ -11,55 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         /* Sidebar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100vh;
-            background-color: #343a40;
-            transition: left 0.3s;
-            overflow-x: hidden;
-        }
-
-        .navbar.active {
-            left: 0;
-        }
-
-        .navbar .nav-link {
-            color: #d1d8e0;
-        }
-
-        .navbar .nav-link.active {
-            color: #ffffff;
-            background-color: #212529;
-        }
-
-        /* Content */
-        .content {
-            margin-left: 250px;
-            transition: margin-left 0.3s;
-            padding: 20px;
-        }
-
-        .content.collapsed {
-            margin-left: 75px;
-        }
-
-        /* Hide sidebar on small screens */
-        @media (max-width: 768px) {
-            .navbar {
-                left: -250px;
-            }
-
-            .navbar.active {
-                left: 0;
-            }
-
-            .content {
-                margin-left: 0;
-            }
-        }
+        
     </style>
 </head>
 

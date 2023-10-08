@@ -1,0 +1,68 @@
+/* styles.css */
+
+/* Import Tailwind CSS */
+@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+
+/* Import Animate.css */
+@import url('https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css');
+
+/* Import Font Awesome CSS */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+/* Your custom CSS rules go here */
+nav {
+    background-color: aliceblue;
+    border-radius: 1px;
+    border: 1cm;
+    
+}
+
+footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-top: 2em !important;
+  }
+body{
+    margin:2px !important;
+}  
+
+/* Body Styles */
+body {
+    background-color: #f0f0f0; /* Soft pastel background color */
+    font-family: Arial, Helvetica, sans-serif; /* Choose an appropriate font-family */
+    font-size: 16px; /* Adjust the font size as needed */
+    color: #333; /* Dark text color for readability */
+  }
+  
+  /* Header Styles */
+  .header {
+    background-color: #ff5733; /* Vibrant primary color for the header */
+    padding: 20px; /* Adjust padding as needed */
+    text-align: center; /* Center-align header content */
+  }
+  
+  .header h1 {
+    color: #fff; /* Text color for header title */
+    font-size: 36px; /* Adjust the font size for the header title */
+  }
+  
+  /* Navigation Bar Styles (if applicable) */
+  .navbar {
+    background-color: #ff5733; /* Use the same header color for the navbar */
+    /* Add additional styles for the navigation bar */
+  }
+  
+  /* Button Styles (if applicable) */
+  .button {
+    background-color: #66bb6a; /* Secondary pastel color for buttons */
+    color: #fff; /* Text color for buttons */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none;
+    cursor: pointer;
+    /* Add additional button styles */
+  }
+  
+  /* Add more styles as needed for specific elements on your website */
+  

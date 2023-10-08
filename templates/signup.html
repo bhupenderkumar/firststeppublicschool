@@ -8,107 +8,86 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         /* Background Animation CSS */
-        @keyframes runAnimation {
-            0% {
-                background-position: 0 0;
-            }
-
-            100% {
-                background-position: 100% 0;
-            }
-        }
-
-        body {
-            animation: runAnimation 15s linear infinite;
-            background-color: #f0f4f8;
-        }
-
-        .header {
-            background-color: #2a4365;
-            color: #ffffff;
-            text-align: center;
-            padding: 1rem;
-        }
     </style>
 </head>
 
 <body>
     {% include 'header.html' %}
-    <div class="container">
-        <div class="py-5 m-2 ">
+    <div class="container mx-auto px-4">
+        <div class="py-5 m-2">
             <h1 class="text-3xl text-center mb-4">Sign Up</h1>
             <form action="/signup" method="POST" onsubmit="return validatePasswords() && validateForm();">
+                <div class=" ">
+                    <div class="mb-4">
+                        <label for="class_name" class="form-label">Class Name</label>
+                        <select id="class_name" name="class_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                            <option value="">Select Class</option>
+                            {% for class_name in classes %}
+                            <option value="{{ class_name }}">{{ class_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div class="mb-4">
-                    <label for="class_name" class="form-label">Class Name</label>
-                    <select id="class_name" name="class_name" class="form-select" required>
-                        <option value="">Select Class</option>
-                        {% for class_name in classes %}
-                        <option value="{{ class_name }}">{{ class_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Admission No.</label>
-                    <input type="text" id="admNo" name="admNo"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Name</label>
-                    <input type="text" id="username" name="username"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Father Name</label>
-                    <input type="text" id="fathername" name="fathername"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Mother Name</label>
-                    <input type="text" id="mothername" name="mothername"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Primary Contact Number</label>
-                    <input type="number" id="primaryContactNumber" name="primaryContactNumber"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Secondary Contact Number</label>
-                    <input type="number" id="secondaryContactNumber" name="secondaryContactNumber"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="username" class="text-gray-700">Emergency Contact Number</label>
-                    <input type="number" id="emergencyContactNumber" name="emergencyContactNumber"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="email" class="text-gray-700">Email</label>
-                    <input type="email" id="email" name="email"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="text-gray-700">Password</label>
-                    <input type="password" id="password" name="password"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <input type="hidden" id="role" name="role" value="parents">
-                </div>
-                <div class="mb-4">
-                    <label for="confirm_password" class="text-gray-700">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="flex items-center justify-between">
-                    <button type="submit"
-                        class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Signup</button>
-                    {% if error %}
-                    <p class="animate__animated animate__shakeX text-red-500 text-xs italic">{{ error }}</p>
-                    {% endif %}
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Admission No.</label>
+                        <input type="text" id="admNo" name="admNo"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Name</label>
+                        <input type="text" id="username" name="username"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Father Name</label>
+                        <input type="text" id="fathername" name="fathername"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Mother Name</label>
+                        <input type="text" id="mothername" name="mothername"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Primary Contact Number</label>
+                        <input type="number" id="primaryContactNumber" name="primaryContactNumber"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Secondary Contact Number</label>
+                        <input type="number" id="secondaryContactNumber" name="secondaryContactNumber"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="username" class="text-gray-700">Emergency Contact Number</label>
+                        <input type="number" id="emergencyContactNumber" name="emergencyContactNumber"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="text-gray-700">Email</label>
+                        <input type="email" id="email" name="email"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="text-gray-700">Password</label>
+                        <input type="password" id="password" name="password"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <input type="hidden" id="role" name="role" value="parents">
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirm_password" class="text-gray-700">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit"
+                            class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Signup</button>
+                        {% if error %}
+                        <p class="animate__animated animate__shakeX text-red-500 text-xs italic">{{ error }}</p>
+                        {% endif %}
+                    </div>
                 </div>
             </form>
             <p class="mt-4 text-center">
