@@ -408,6 +408,52 @@ def get_next_sequence(name):
     else:
         return 1;
 
+@app.route('/fees')
+@login_required
+def fees():
+    student_id = session.get('user_id')
+    fees_list = []
+    student_name = session.get('user_name')
+    # If the role is either 'admin' or 'parents'
+    fees_list = list(db.fees.find({'student_id': student_id}))
+    return render_template('fees.html', fees_list=fees_list, student_name=student_name)
+
+
+@app.route('/teachers')
+@login_required
+def teachers():
+    if session.get('user_role') == 'admin':
+        teachers = db.teachers.find()
+        return render_template('teachers.html', teachers=teachers)
+    return redirect(url_for('dashboard'))
+
+@app.route("/raise_grievance", methods=["GET", "POST"])
+@login_required
+def raise_grievance():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    user_id = session['user_id']
+    grievances = list(db.grievances.find({"user_id": user_id}))
+    if request.method == "POST":
+        grievance_text = request.form["grievance_details"]  # replace "grievance_text" with the name attribute of your form field
+        grievance = { 
+            'grievance_id':get_next_sequence("grievance"),
+            'class_name':request.form['class_name'],
+            'school_response':'',
+            'user_id':user_id,
+            'grievance_text': grievance_text,
+            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')  # Storing the time the grievance was raised
+        }
+        db.grievances.insert_one(grievance)
+        flash('Your grievance has been recorded!', 'success')
+        classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+        return render_template('raise_grievance.html', classes=classes,grievances=grievances)
+    else:
+        grievances = list(db.grievances.find({"user_id": user_id}))
+        classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+        return render_template('raise_grievance.html', grievances=grievances,  classes=classes)
+
+
 @app.route('/downloadfees/<fee_id>')
 def download_fee_receipt(fee_id):
     fee_data = db.fees.find_one({"_id": ObjectId(fee_id)})
