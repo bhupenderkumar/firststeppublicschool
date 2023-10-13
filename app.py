@@ -11,7 +11,9 @@ from receipt import PDF
 app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/school_management')
+db_url = os.environ.get('MONGO_URI')
+default_mongo_uri = "mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority"
+mongo_uri = os.environ.get('MONGO_URI', default_mongo_uri)
 app.config["MONGO_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school_management
@@ -40,6 +42,8 @@ def login_required(f):
 
 login_manager = LoginManager(app)
 mongo = PyMongo(app)
+print('initialized mongo instance')
+print(mongo)
 
 
 

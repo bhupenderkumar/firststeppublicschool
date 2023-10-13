@@ -1,0 +1,14 @@
+{
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "app.py",
+        "methods": ["GET", "POST"]
+      },
+      {
+        "src": "/(.*)",
+        "status": 404,
+        "dest": "error.html"
+      }
+    ]
+  }
