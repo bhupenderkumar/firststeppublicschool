@@ -269,6 +269,33 @@ def is_admin(user_id):
     # Dummy function, implement your own logic to check if a user is admin
    return True
 
+@app.route('/fees-form')
+def fees_form():
+    classes = mongo.db.classes.find()  # Assuming you have a collection of classes
+    return render_template('update_fees.html', classes=classes, current_date=date.today())
+
+
+
+@app.route('/create_notification', methods=['POST', 'GET'])
+@login_required
+def create_notification():
+    classes = get_classes_from_db()
+    if request.method == 'POST':
+        class_name = request.form.get('class_name')
+        notification_text = request.form.get('notification_text')
+        student_id = session.get('user_id')
+        # Assuming you have a 'notifications' collection in your database
+        db.notifications.insert_one({
+            'class_name': class_name,
+            'notification_text': notification_text,
+            'student_id': student_id,
+            'date': datetime.now()
+        })
+        return redirect(url_for('notifications'))
+    else:
+        return render_template('create_notification.html', classes=classes)
+    
+
 @app.route('/edit_student/<student_id>', methods=['GET', 'POST'])
 @login_required
 def edit_student(student_id):

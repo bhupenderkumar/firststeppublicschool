@@ -8,47 +8,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
-<body>
+<body class="bg-gray-100">
     {% include 'header.html' %}
-    <div>
-        <div>
-          <div class="mt-10">
-            <h1 class="text-3xl text-center mb-4">Fees</h1>
-            {% if fees_list|length > 0 %}
-              <div class="overflow-x-auto">
-                <table class="min-w-full">
-                  <thead>
+    <div class="container mx-auto mt-10">
+        <h1 class="text-3xl text-center mb-4">Fees</h1>
+        {% if fees_list|length > 0 %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white shadow-md rounded">
+                <thead>
                     <tr>
-                      <th class="py-2 px-4 border-b border-gray-200">ID</th>
-                      <th class="py-2 px-4 border-b border-gray-200">Class Name</th>
-                      <th class="py-2 px-4 border-b border-gray-200">Student Name</th>
-                      <th class="py-2 px-4 border-b border-gray-200">Amount</th>
-                      <th class="py-2 px-4 border-b border-gray-200">Submit Date</th>
-                      <th class="py-2 px-4 border-b border-gray-200">Collected By</th>
-                      <th class="py-2 px-4 border-b border-gray-200">Download</th>
+                        <th class="py-2 px-4 border-b border-gray-200">ID</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Class Name</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Student Name</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Amount</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Submit Date</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Collected By</th>
+                        <th class="py-2 px-4 border-b border-gray-200">Download</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                     {% for fee in fees_list %}
-                      <tr>
+                    <tr>
                         <td class="py-2 px-4 border-b border-gray-200">{{ fee._id }}</td>
                         <td class="py-2 px-4 border-b border-gray-200">{{ fee.class_name }}</td>
                         <td class="py-2 px-4 border-b border-gray-200">{{ fee.student_name }}</td>
                         <td class="py-2 px-4 border-b border-gray-200">₹{{ fee.amount }}</td>
                         <td class="py-2 px-4 border-b border-gray-200">{{ fee.submit_date }}</td>
                         <td class="py-2 px-4 border-b border-gray-200">{{ fee.collected_by }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200"><a href="/downloadfees/{{fee._id}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download</a></td>
-                      </tr>
+                        <td class="py-2 px-4 border-b border-gray-200"><a href="/downloadfees/{{fee._id}}"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download</a>
+                        </td>
+                    </tr>
                     {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            {% else %}
-              <p class="text-gray-700 text-center">No fees submitted for this student yet.</p>
-            {% endif %}
-          </div>
+                </tbody>
+            </table>
         </div>
-      </div>
+        {% else %}
+        <p class="text-gray-700 text-center">No fees submitted for this student yet.</p>
+        {% endif %}
+    </div>
     {% include 'footer.html' %}
 </body>
 

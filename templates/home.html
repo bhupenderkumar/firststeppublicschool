@@ -11,184 +11,96 @@
 
 <body>
     {% include 'header.html' %}
-    <div class="container mx-auto  py-5 m-2">
-        <div class="flex flex-col justify-content-center">
-            <h1 class="text-3xl font-bold  m-2">Welcome to Our Educational Platform</h1>
-            <p class="text-lg m-2">We are excited to have you join our community of learners. Our platform
-                is designed
-                to provide students of all ages with the tools and resources they need to succeed in school and in life.
-            </p>
-
+    <div class="container mx-auto py-8 px-4">
+        <div class="text-center">
+            <h1 class="text-4xl font-bold text-blue-800 mb-4 animated-text">Welcome to Our Educational Platform</h1>
+            <p class="text-lg text-gray-700 mb-6 animated-text">We are excited to have you join our community of learners. Our platform is designed to provide students of all ages with the tools and resources they need to succeed in school and in life.</p>
             {% if not session.get('username') %}
-            <a href="/login"
-                class="mb-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <a href="/login" class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline mb-6 transition duration-300 animated-button">
                 <span class="mr-2">Login</span>
-                <i class="fas fa-user-plus ml-2"></i>
+                <i class="fas fa-sign-in-alt"></i>
             </a>
             {% endif %}
-
-            <div class="">
-                <!-- Introduction -->
-                <div class="swiper mySwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img class="object-contain w-full h-96" src="/static/images/MAHATAMA.JPEG"
-                                alt="Mahatma Gandhi Jayanti" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="object-contain w-full h-96"
-                                src="/static/images/TEACHERDAYCELEBRATION.jpeg" alt="Teachers Day Celebrations" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="object-contain w-full h-96"
-                                src="/static/images/PAINT.JPEG" alt="Wall Painting Activity" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="object-contain w-full h-96"
-                                src="/static/images/RAKHICELEBRATION.jpeg" alt="Rakhi Day Celebrations" />
-                        </div>
-
-                        <div class="swiper-slide">
-                            <img class="object-contain w-full h-96"
-                                src="/static/images/GANDHI.JPEG" alt="Rakhi Day Celebrations" />
-                        </div>
-                    </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-pagination"></div>
-                </div>
-              
-
-                <!-- School Activities -->
-                <section class="container mx-auto my-12">
-                  <ul class="list-disc list-inside">
-                      <li>We offer a rigorous academic program that challenges students to think critically and creatively.</li>
-                      <li>We provide a supportive and nurturing environment where students can learn and grow.</li>
-                      <li>We offer a variety of extracurricular activities and clubs to help students explore their interests and develop their talents.</li>
-                      <li>We are committed to working with parents and the community to create a successful educational experience for all students.</li>
-                    </ul>
-                  </section>
-
-                <!-- Our Mission and Vision -->
-                <section class="container mx-auto my-12">
-                    <h2 class="text-2xl font-bold ">Our Mission and Vision</h2>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                      <div class="w-full sm:w-1/2">
-                        <h3 class="text-xl font-bold">Mission</h3>
-                        <p class="text-lg">To empower students to become lifelong learners and responsible global citizens.</p>
-                      </div>
-                      <div class="w-full sm:w-1/2">
-                        <h3 class="text-xl font-bold">Vision</h3>
-                        <p class="text-lg">To create a nurturing and inclusive learning community that inspires excellence and values diversity.</p>
-                      </div>
-                    </div>
-                  </section>
-                <!-- Testimonials -->
-                <section class="container mx-auto my-12">
-                    <h2 class="text-2xl font-bold ">What Parents and Students Say</h2>
-                  
-                    <div class="flex flex-col sm:flex-row gap-4">
-                      <div class="w-full sm:w-1/2">
-                        <p class="text-lg ">"My child has thrived at First Step Public School. The teachers are caring and supportive, and the curriculum is challenging and engaging. I would highly recommend this school to any parent looking for a high-quality education for their child." - Parent</p>
-                      </div>
-                  
-                      <div class="w-full sm:w-1/2">
-                        <p class="text-lg ">"I love First Step Public School! The teachers are passionate about their subjects, and they make learning fun. I feel challenged and supported in all of my classes. I'm so grateful for the opportunities I've had at this school." - Student</p>
-                      </div>
-                    </div>
-                  
-                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                      <div class="w-full sm:w-1/2">
-                        <p class="text-lg t">"First Step Public School is a truly special place. The teachers are dedicated to helping each student succeed. My child has grown academically, emotionally, and socially since starting at this school. I'm so glad we chose First Step Public School." - Parent</p>
-                      </div>
-                  
-                      <div class="w-full sm:w-1/2">
-                        <p class="text-lg ">"I've made lifelong friends at First Step Public School. The extracurricular activities are diverse and engaging, and there's something for everyone. I'm so grateful for the experiences I've had at this school." - Student</p>
-                      </div>
-                    </div>
-                  
-                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                      <div class="w-full sm:w-1/2">
-                        <p class="text-lg ">"First Step Public School is a diverse and inclusive community. My child feels welcome and valued here. The teachers are committed to creating a safe and supportive learning environment for all students." - Parent</p>
-                      </div>
-                    </div>
-                  </section>
-
-                <!-- Contact Us -->
-                <section class="my-5">
-                    <h2 class="text-2xl font-semibold">Contact Us</h2>
-                    <p class="text-lg mt-4">
-                        If you have any questions or would like to visit our school, please don't hesitate to contact
-                        us. We'd love to
-                        hear from you!
-                    </p>
-                    <p class="text-lg mt-2">
-                        <i class="fas fa-phone mr-2"></i> <a href="tel:+919717267473">Phone: (+91) 9717267473</a> | <a class="button btn" href="https://wa.me/+919717267473">WhatsApp</a>
-                    </p>
-                    
-                </section>
-            </div>
-
-            <!-- <div class="flex flex-col md:flex-row items-center mb-4">
-              <img src="/static/images/consultant.png"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6" alt="Education Consultant's Photo">
-            <div class="ml-4 px-8 py-6">
-              <h2 class="text-xl font-semibold">Education Consultant</h2>
-                    <p class="text-justify mt-4">When I envisioned the inception of educational spaces, my dream was to
-                        create an environment where every child feels valued, heard, and inspired. Today, I am thrilled
-                        to witness that dream becoming a reality. As an education consultant, I'm consistently
-                        enthralled by the innovation, creativity, and passion that I encounter in these halls each day.
-                        Our dedication to excellence, both in academic pursuits and in nurturing strong character,
-                        propels us forward with unwavering determination. Let's continue to dream, learn, and aspire for
-                        greatness, hand in hand, as we shape the future of education together.
-                        .</p>
-                </div>
-            </div>
-
-          <!-- Principal Section -->
-            <!-- <div class="flex flex-col md:flex-row items-center mb-4">
-                <img src="/static/images/principal.jpeg" class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6"
-                    alt="Principal's Photo">
-                <div class="ml-4 px-8 py-6">
-                    <h2 class="text-xl font-semibold">Principal's Message</h2>
-                    <p class="text-justify mt-4">
-                        In our esteemed institution, we believe in nurturing minds and souls. The principal aim of our
-                        educational
-                        platform is not just the dissemination of knowledge but the holistic development of each
-                        student. We take
-                        pride in our diverse community of learners and educators, coming together to forge the leaders
-                        of
-                        tomorrow. Through dedication, commitment, and a continuous desire to improve, we ensure that
-                        every student
-                        is equipped with the skills they need to face the ever-changing challenges of the 21st century.
-                        I invite
-                        you to become a part of our journey, to witness the transformative power of education firsthand.
-                    </p>
-                </div>
-            </div>
-
-           
-            <div class="flex flex-col md:flex-row items-center mb-4">
-                <img src="/static/images/viceprincipal.jpeg" class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6"
-                    alt="Vice Principal's Photo">
-                <div class="ml-4 px-8 py-6">
-                    <h2 class="text-xl font-semibold">Vice Principal's Message</h2>
-                    <p class="text-justify mt-4">
-                        Education, at its core, is a beacon that illuminates the path of life. Here, we strive to light
-                        that beacon
-                        for every student. As the Vice Principal, my goal is to support our vibrant community in its
-                        educational
-                        journey. Our emphasis on collaborative learning, real-world application, and fostering a love
-                        for lifelong
-                        learning ensures that our students are well-prepared for the world outside. I'm thrilled to see
-                        the incredible
-                        accomplishments of our students and faculty, and I'm eager for what the future holds.
-                    </p>
-                </div>
-            </div>
-            --> 
-
-
         </div>
+
+        <!-- Slider -->
+        <div class="swiper mySwiper my-8">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img class="object-cover w-full h-80 rounded-lg" src="/static/images/MAHATAMA.JPEG" alt="Mahatma Gandhi Jayanti">
+                </div>
+                <div class="swiper-slide">
+                    <img class="object-cover w-full h-80 rounded-lg" src="/static/images/TEACHERDAYCELEBRATION.jpeg" alt="Teachers Day Celebrations">
+                </div>
+                <div class="swiper-slide">
+                    <img class="object-cover w-full h-80 rounded-lg" src="/static/images/PAINT.JPEG" alt="Wall Painting Activity">
+                </div>
+                <div class="swiper-slide">
+                    <img class="object-cover w-full h-80 rounded-lg" src="/static/images/RAKHICELEBRATION.jpeg" alt="Rakhi Day Celebrations">
+                </div>
+                <div class="swiper-slide">
+                    <img class="object-cover w-full h-80 rounded-lg" src="/static/images/GANDHI.JPEG" alt="Gandhi Jayanti Celebrations">
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <!-- School Activities -->
+        <section class="my-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">School Activities</h2>
+            <ul class="list-disc list-inside text-gray-700">
+                <li>We offer a rigorous academic program that challenges students to think critically and creatively.</li>
+                <li>We provide a supportive and nurturing environment where students can learn and grow.</li>
+                <li>We offer a variety of extracurricular activities and clubs to help students explore their interests and develop their talents.</li>
+                <li>We are committed to working with parents and the community to create a successful educational experience for all students.</li>
+            </ul>
+        </section>
+
+        <!-- Our Mission and Vision -->
+        <section class="my-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">Our Mission and Vision</h2>
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="w-full lg:w-1/2">
+                    <h3 class="text-xl font-bold text-blue-800">Mission</h3>
+                    <p class="text-lg text-gray-700">To empower students to become lifelong learners and responsible global citizens.</p>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <h3 class="text-xl font-bold text-blue-800">Vision</h3>
+                    <p class="text-lg text-gray-700">To create a nurturing and inclusive learning community that inspires excellence and values diversity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="my-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">What Parents and Students Say</h2>
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div>
+                    <p class="text-lg text-gray-700">"My child has thrived at First Step Public School. The teachers are caring and supportive, and the curriculum is challenging and engaging. I would highly recommend this school to any parent looking for a high-quality education for their child." - Parent</p>
+                </div>
+                <div>
+                    <p class="text-lg text-gray-700">"I love First Step Public School! The teachers are passionate about their subjects, and they make learning fun. I feel challenged and supported in all of my classes. I'm so grateful for the opportunities I've had at this school." - Student</p>
+                </div>
+                <div>
+                    <p class="text-lg text-gray-700">"First Step Public School is a truly special place. The teachers are dedicated to helping each student succeed. My child has grown academically, emotionally, and socially since starting at this school. I'm so glad we chose First Step Public School." - Parent</p>
+                </div>
+                <div>
+                    <p class="text-lg text-gray-700">"I've made lifelong friends at First Step Public School. The extracurricular activities are diverse and engaging, and there's something for everyone. I'm so grateful for the experiences I've had at this school." - Student</p>
+                </div>
+                <div>
+                    <p class="text-lg text-gray-700">"First Step Public School is a diverse and inclusive community. My child feels welcome and valued here. The teachers are committed to creating a safe and supportive learning environment for all students." - Parent</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Us -->
+        <section class="my-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">Contact Us</h2>
+            <p class="text-lg text-gray-700 mb-4 animated-text">If you have any questions or would like to visit our school, please don't hesitate to contact us. We'd love to hear from you!</p>
+            <p class="text-lg text-gray-700 mb-6 animated-text"><i class="fas fa-phone mr-2"></i> <a href="tel:+919717267473">Phone: (+91) 9717267473</a> | <a class="button btn" href="https://wa.me/+919717267473">WhatsApp</a></p>
+        </section>
     </div>
     {% include 'footer.html' %}
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
