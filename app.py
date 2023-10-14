@@ -12,9 +12,9 @@ from receipt import PDF
 app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
-db_url = os.environ.get('MONGO_URI')
-mongo_uri = os.environ.get('MONGO_URI')
-app.config["MONGO_URI"] = mongo_uri  # replace with your database URI
+db_url = os.environ.get('MONGODB_URI')
+mongo_uri = os.environ.get('MONGODB_URI')
+app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school
 fs = GridFS(db)
