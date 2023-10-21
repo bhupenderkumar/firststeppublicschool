@@ -13,7 +13,7 @@ app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
 db_url = os.environ.get('MONGODB_URI')
-mongo_uri = os.environ.get('MONGODB_URI')
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority'
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school
@@ -52,10 +52,10 @@ def load_user(user_id):
     return db.students.find_one({'_id': ObjectId(user_id)})
 
 def hash_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()) # type: ignore
 
 def verify_password(stored_password, provided_password):
-    return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
+    return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password) # type: ignore
 
 
 @app.route('/')
@@ -93,7 +93,7 @@ def signup():
     form_data = extract_data_from_form(request.form)
     if 'confirm_password' in form_data:
         form_data.pop('confirm_password')
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()) # type: ignore
     user_data = {
         **form_data,
         'username': username,
@@ -153,17 +153,6 @@ def list_media_folders():
 @login_required
 def activities_plan():
     return render_template('activities_plan.html')
-
-@app.route('/list-media/<folder_name>')
-def list_media_in_folder(folder_name):
-    folder_path = os.path.join(MEDIA_FOLDER, folder_name)
-    
-    if not os.path.exists(folder_path):
-        return jsonify({'error': 'Folder not found'}), 404
-    files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-    images = [f for f in files if f.endswith(('.png', '.jpg', '.jpeg'))]
-    videos = [f for f in files if f.endswith(('.mp4', '.avi', '.mkv'))]
-    return jsonify({'images': images, 'videos': videos})
 
 @app.route('/media/<folder_name>/<path:filename>')
 def serve_media(folder_name, filename):
@@ -380,4 +369,4 @@ def grades():
     return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True,host='0.0.0.0',port=5000)

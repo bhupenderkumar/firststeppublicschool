@@ -26,7 +26,7 @@ UPLOAD_FOLDER = 'uploads'  # Create a folder in your project directory named 'up
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+MEDIA_FOLDER = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -42,7 +42,7 @@ login_manager = LoginManager(app)
 mongo = PyMongo(app)
 
 @app.route('/')
-def home():
+def home(): # type: ignore
     return render_template('home.html')
 
 def get_classes_from_db():
@@ -80,7 +80,7 @@ def signup():
     # Extract other data from the form
     form_data = extract_data_from_form(request.form)
     # Hash the password
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()) # type: ignore
     # Combine data for insertion into the database
     user_data = {
         'username': username,
@@ -97,7 +97,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = db.students.find_one({'username': username})
-        if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+        if user and bcrypt.checkpw(password.encode('utf-8'), user['password']): # type: ignore
             login_user(user)
             return redirect(url_for('home'))
         else:
@@ -155,7 +155,7 @@ def extract_data_from_request(request_obj, exclude_keys=None):
 
 @app.route("/fees", methods=["GET", "POST"])
 @login_required
-def create_fee():
+def create_fee(): # type: ignore
     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
     if request.method == "GET":
         return render_template('create_fee.html', classes=classes)
@@ -182,7 +182,7 @@ def raise_grievance():
     if request.method == "GET":
         return render_template('raise_grievance.html', classes=classes)
     grievance_data = extract_data_from_request(request)
-    grievance_data["grievance_id"] = get_next_sequence("grievance")
+    grievance_data["grievance_id"] = get_next_sequence("grievance") # type: ignore
     grievance_data["school_response"] = ""
     grievance_data["user_name"] = session["user_name"]
     grievance_data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -192,13 +192,13 @@ def raise_grievance():
 
 @app.route("/create_notification", methods=["GET", "POST"])
 @login_required
-def create_notification():
+def create_notification(): # type: ignore
     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
     if request.method == "GET":
         all_notification = db.notifications.find();
         return render_template('create_notification.html', classes=classes, all_notification=all_notification)
     notification_data = extract_data_from_request(request)
-    notification_data["notification_id"] = get_next_sequence("notification")
+    notification_data["notification_id"] = get_next_sequence("notification") # type: ignore
     notification_data["user_id"] = session["user_id"]
     notification_data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
     db.notifications.insert_one(notification_data)
@@ -269,6 +269,17 @@ def is_admin(user_id):
     # Dummy function, implement your own logic to check if a user is admin
    return True
 
+@app.route('/list-media/<folder_name>')
+def list_media_in_folder(folder_name):
+    folder_path = os.path.join(MEDIA_FOLDER, folder_name)
+    
+    if not os.path.exists(folder_path):
+        return jsonify({'error': 'Folder not found'}), 404
+    files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+    images = [f for f in files if f.endswith(('.png', '.jpg', '.jpeg'))]
+    videos = [f for f in files if f.endswith(('.mp4', '.avi', '.mkv'))]
+    return jsonify({'images': images, 'videos': videos})
+
 @app.route('/fees-form')
 def fees_form():
     classes = mongo.db.classes.find()  # Assuming you have a collection of classes
@@ -278,7 +289,7 @@ def fees_form():
 
 @app.route('/create_notification', methods=['POST', 'GET'])
 @login_required
-def create_notification():
+def create_notification(): # type: ignore
     classes = get_classes_from_db()
     if request.method == 'POST':
         class_name = request.form.get('class_name')
@@ -289,7 +300,7 @@ def create_notification():
             'class_name': class_name,
             'notification_text': notification_text,
             'student_id': student_id,
-            'date': datetime.now()
+            'date': date.now() # type: ignore
         })
         return redirect(url_for('notifications'))
     else:
@@ -298,7 +309,7 @@ def create_notification():
 
 @app.route('/edit_student/<student_id>', methods=['GET', 'POST'])
 @login_required
-def edit_student(student_id):
+def edit_student(student_id): # type: ignore
     student = db.students.find_one({'student_id': student_id})
 
     if request.method == 'POST':
@@ -335,7 +346,7 @@ def create_fee():
     if request.method == "GET":
         return render_template('create_fee.html', classes=classes)
     fee_data = extract_data_from_request(request)
-    fee_data['fee_type'] = request.form.getlist('fee_type[]')
+    fee_data['fee_type'] = request.form.getlist('fee_type[]') # type: ignore
     fee_data["collected_by"] = session["username"]
     db.fees.insert_one(fee_data)
     return redirect(url_for("create_fee"))
@@ -361,7 +372,7 @@ def create_notification():
             'class_name': class_name,
             'notification_text': notification_text,
             'student_id': student_id,
-            'date': datetime.now()
+            'date': datetime.now() # type: ignore
         })
         return redirect(url_for('notifications'))
     else:
@@ -373,9 +384,9 @@ def create_notification():
 def deactivate_user(user_id):
     # Ensure only admins can access this route
     if session.get('user_role') != 'admin':
-        return redirect(url_for('dashboard'), "You don't have permission to access this page!")
+        return redirect(url_for('dashboard'), "You don't have permission to access this page!") # type: ignore
     db.students.update_one({"_id": user_id}, {"$set": {"is_active": False}})
-    return redirect(url_for('admin_dashboard'), "User has been deactivated!")
+    return redirect(url_for('admin_dashboard'), "User has been deactivated!") # type: ignore
 
 
 

@@ -93,7 +93,9 @@ body {
       background-position: 0% 50%;
   }
 }
-
+head,body,footer {
+  font-family: 'Times New Roman', Times, serif;
+}
 /* Add animation to the header elements */
 .header-2 .container {
   animation: fadeInDown 1s ease-in-out;

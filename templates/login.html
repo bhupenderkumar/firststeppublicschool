@@ -7,41 +7,50 @@
     <title>Login</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    
+
 </head>
 
 <body>
-    
-{% include 'header.html' %}
-<div>
-    <div>
-            <form method="POST">
-                <div class="mb-4 mt-4">
-                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+
+    {% include 'header.html' %}
+    <div class="h-screen flex items-center justify-center">
+        <div class="w-full max-w-xs">
+            <form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username(Child's first name in lowercase)</label>
                     <input type="text" id="username" name="username" required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
                 <div class="mb-6">
-                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password(Mother's First name in lowercase)</label>
                     <input type="password" id="password" name="password" required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
+                <div class="mb-6">
+                    <label for="remember" class="flex items-center">
+                        <input type="checkbox" id="remember" name="remember" class="mr-2">
+                        <span class="text-sm text-gray-700">Remember me</span>
+                    </label>
+                </div>
                 <div class="flex items-center justify-between">
                     <button type="submit"
-                        class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Login
                     </button>
                     {% if error %}
-                    <p class="animate__animated animate__shakeX text-red-500 text-xs italic">{{ error }}</p>
+                    <p class="text-red-500 text-xs italic">{{ error }}</p>
                     {% endif %}
                 </div>
-            </form>  <p class="mt-4 text-center">
-                Don't have an account? <a href="/signup" class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Signup</a>
+            </form>
+            <p class="text-center">
+                Don't have an account? <a href="/signup"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Signup</a>
             </p>
         </div>
     </div>
 
-{% include 'footer.html' %}
+
+    {% include 'footer.html' %}
 </body>
 
 </html>
