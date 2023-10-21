@@ -113,10 +113,7 @@
             var emergency = document.getElementById('emergencyContactNumber').value;
 
             // Check if numbers are unique
-            if (primary === secondary || primary === emergency || secondary === emergency) {
-                alert('Primary, Secondary, and Emergency numbers must be unique.');
-                return false;
-            }
+            
 
             // Check if numbers are 10 digits
             var tenDigitRegex = /^\d{10}$/;
