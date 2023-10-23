@@ -326,7 +326,7 @@ def edit_student(student_id): # type: ignore
 @app.route('/update_attendance/<attendance_id>', methods=['PUT'])
 def update_attendance(attendance_id):
     data = request.json  
-    new_status = data.get('new_status')
+    new_status = data.get('new_status') 
     updated_result = db.attendance.update_one(
         {'_id': ObjectId(attendance_id)},
         {'$set': {'status': new_status}}
