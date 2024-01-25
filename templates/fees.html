@@ -7,35 +7,34 @@
     <title>Fees</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-
 <body class="bg-gray-100">
     {% include 'header.html' %}
     <div class="container mx-auto mt-10">
         <h1 class="text-3xl text-center mb-4">Fees</h1>
         {% if fees_list|length > 0 %}
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white shadow-md rounded">
+            <table class="table-auto w-full">
                 <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b border-gray-200">ID</th>
-                        <th class="py-2 px-4 border-b border-gray-200">Class Name</th>
-                        <th class="py-2 px-4 border-b border-gray-200">Student Name</th>
-                        <th class="py-2 px-4 border-b border-gray-200">Amount</th>
-                        <th class="py-2 px-4 border-b border-gray-200">Submit Date</th>
-                        <th class="py-2 px-4 border-b border-gray-200">Collected By</th>
-                        <th class="py-2 px-4 border-b border-gray-200">Download</th>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">ID</th>
+                        <th class="py-3 px-6 text-left">Class Name</th>
+                        <th class="py-3 px-6 text-left">Student Name</th>
+                        <th class="py-3 px-6 text-left">Amount</th>
+                        <th class="py-3 px-6 text-left">Submit Date</th>
+                        <th class="py-3 px-6 text-left">Collected By</th>
+                        <th class="py-3 px-6 text-left">Download</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-gray-600 text-sm font-light">
                     {% for fee in fees_list %}
-                    <tr>
-                        <td class="py-2 px-4 border-b border-gray-200">{{ fee._id }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200">{{ fee.class_name }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200">{{ fee.student_name }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200">₹{{ fee.total_amount }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200">{{ fee.submit_date }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200">{{ fee.collected_by }}</td>
-                        <td class="py-2 px-4 border-b border-gray-200"><a href="/downloadfees/{{fee._id}}"
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ fee._id }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.class_name }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.student_name }}</td>
+                        <td class="py-3 px-6 text-left">₹{{ fee.total_amount }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.submit_date }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.collected_by }}{{fee}}</td>
+                        <td class="py-3 px-6 text-left"><a href="/downloadfees/{{fee._id}}"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download</a>
                         </td>
                     </tr>

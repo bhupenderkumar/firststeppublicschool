@@ -9,80 +9,72 @@
 </head>
 
 <body>
-  <div class="">
-    <nav
-      class="">
-      <div class="container px-4 mx-auto md:flex md:items-center">
+  <div class="container mx-auto">
+    <nav class="flex items-center justify-between py-4">
+      <div class="flex items-center">
+        <a href="/" class="font-bold text-xl">
+          <img src="/static/images/school_logo.jpeg" alt="First Step School" class="w-16 h-16 rounded-full">
+          First Step School
+        </a>
+      </div>
+      <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
+        <a href="/"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-home mr-2"></i> Home
+        </a>
+        <a href="/fees"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-dollar-sign mr-2"></i> Fees
+        </a>
+        <a href="/raise_grievance"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-bullhorn mr-2"></i> Raise Grievance
+        </a>
+        <a href="/syllabus"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-book-open mr-2"></i> Syllabus
+        </a>
 
-        <div class="flex justify-between items-center">
-          <a href="/" class="font-bold text-xl ">
-            <img src="/static/images/school_logo.jpeg" alt="First Step School" class="w-16 h-16 rounded-full">
-            First Step School
-          </a>
-          <button
-            class="border border-solid border-gray-600 px-3 py-1 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden"
-            id="navbar-toggle">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
+        <a href="/holiday-calendar"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-calendar-alt mr-2"></i> Holiday Calendar
+        </a>
+        <a href="/activities-plan"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-tasks mr-2"></i> Activities Plan
+        </a>
 
-        <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-          <a href="/"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-home mr-2"></i> Home
-          </a>
-          <a href="/fees"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-dollar-sign mr-2"></i> Fees
-          </a>
-          <a href="/raise_grievance"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-bullhorn mr-2"></i> Raise Grievance
-          </a>
-          <a href="/syllabus"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-book-open mr-2"></i> Syllabus
-          </a>
+        {% if session.get('user_role') == 'admin' %}
+        <a href="/create_notification"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-bell mr-2"></i> Create Notification
+        </a>
 
-          <a href="/holiday-calendar"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-calendar-alt mr-2"></i> Holiday Calendar
-          </a>
-          <a href="/activities-plan"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-tasks mr-2"></i> Activities Plan
-          </a>
-          {% if session.get('user_role') == 'admin' %}
-          <a href="/create_notification"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-bell mr-2"></i> Create Notification
-          </a>
-
-          <a href="/create_fees"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-dollar-sign mr-2"></i> Create Fees
-          </a>
-          <a href="/create_attendance"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="fas fa-calendar-check mr-2"></i> Create Attendance
-          </a>
-          {% endif %}
-          <a href="/fetch_attendance"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-            <i class="far fa-calendar-check mr-2"></i> Attendance
-          </a>
-          {% if session.get('username') %}
-          <!-- If the user is logged in, display these links -->
-          <a href="/logout"
-            class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 rounded">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-          </a>
-          {% else %}
-          <!-- If the user is not logged in, display only these links -->
-          <a href="/login"
-            class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
-            <i class="fas fa-sign-in-alt mr-2"></i> Login
-          </a>
+        <a href="/create_fees"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-dollar-sign mr-2"></i> Create Fees
+        </a>
+        <a href="/create_attendance"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="fas fa-calendar-check mr-2"></i> Create Attendance
+        </a>
+        {% endif %}
+        <a href="/fetch_attendance"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+          <i class="far fa-calendar-check mr-2"></i> Attendance
+        </a>
+        {% if session.get('username') %}
+        <!-- If the user is logged in, display these links -->
+        <a href="/logout"
+          class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 rounded">
+          <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+        {% else %}
+        <!-- If the user is not logged in, display only these links -->
+        <a href="/login"
+          class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
+          <i class="fas fa-sign-in-alt mr-2"></i> Login
+        </a>
           <a href="/signup"
             class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-solid border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
             <i class="fas fa-user-plus mr-2"></i> Signup
@@ -126,5 +118,6 @@
     });
   });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 
 </html>
