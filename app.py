@@ -13,7 +13,8 @@ app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
 db_url = os.environ.get('MONGODB_URI')
-mongo_uri = os.environ.get('MONGODB_URI')
+# mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority'
+mongo_uri = 'localhost:27017'
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school
@@ -32,6 +33,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -45,7 +48,17 @@ mongo = pymongo.MongoClient(mongo_uri)
 print('initialized mongo instance')
 print(mongo.db)
 
-
+@app.route("/create_fees", methods=["GET", "POST"])
+@login_required
+def create_fee():
+    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+    if request.method == "GET":
+        return render_template('create_fee.html', classes=classes)
+    fee_data = extract_data_from_request(request)
+    fee_data['fee_type'] = request.form.getlist('fee_type[]')
+    fee_data["collected_by"] = session["username"]
+    db.fees.insert_one(fee_data)
+    return redirect(url_for("create_fee"))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -55,6 +68,9 @@ def hash_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 def verify_password(stored_password, provided_password):
+    print(stored_password)
+    print(provided_password)
+    print(bcrypt.checkpw(provided_password.encode('utf-8'), stored_password))
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
 
 
@@ -108,7 +124,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         user = db.students.find_one({'username': username})
+        print(user)
+        print(db.students.find_one({'username': username}))
         if user and verify_password(user['password'], password):
             session['user_id'] = str(user['_id'])
             session['user_role'] = user['role']
@@ -177,10 +196,8 @@ def get_classes_from_db():
 
 
 def initialize_classes():
-    default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]    
-    # If the classes collection is empty, add the default classes
+    default_classes = ["Pre Nursery", "Nursery/Prep 1", "L.K.G/Prep II", "U.K.G/Prep II", "I", "II", "III", "IV", "V"]    
     if mongo.db.classes.count_documents({}) == 0:
-        default_classes = ["Pre School", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]
         for cls in default_classes:
             mongo.db.classes.insert_one({"name": cls})
     if not db.counters.find_one({"_id": "grievance"}):
@@ -325,6 +342,7 @@ def raise_grievance():
 @app.route('/downloadfees/<fee_id>')
 def download_fee_receipt(fee_id):
     fee_data = db.fees.find_one({"_id": ObjectId(fee_id)})
+    fee_data['student_id'] =  fee_data['student_id']
     if not fee_data:
         return "Fee data not found", 404
     pdf_data = PDF.create_receipt(fee_data)
@@ -356,7 +374,8 @@ def not_found_error(error):
 
 @app.route('/get-students/<class_name>')
 def get_students(class_name):
-    students = mongo.db.students.find({"class_name": class_name})
+    students = db.students.find({"class_name": class_name})
+    print(students.count())
     students_list = [
         {"username": student["username"], "_id": str(student["_id"])}
         for student in students
@@ -380,4 +399,4 @@ def grades():
     return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

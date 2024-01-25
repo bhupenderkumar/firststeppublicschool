@@ -13,8 +13,9 @@ from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://mongodb:27017/school_management')
-app.config["MONGO_URI"] = mongo_uri  # replace with your database URI
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority'
+app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
+MONGO_URI = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
 client = MongoClient(mongo_uri)
 db = client.school_management
 fs = GridFS(db)
@@ -153,16 +154,16 @@ def extract_data_from_request(request_obj, exclude_keys=None):
         if not exclude_keys or key not in exclude_keys
     }
 
-@app.route("/fees", methods=["GET", "POST"])
-@login_required
-def create_fee():
-    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-    if request.method == "GET":
-        return render_template('create_fee.html', classes=classes)
-    fee_data = extract_data_from_request(request)
-    fee_data["collected_by"] = session["username"]
-    db.fees.insert_one(fee_data)
-    return redirect(url_for("create_fee"))
+# @app.route("/fees", methods=["GET", "POST"])
+# @login_required
+# def create_fee():
+#     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+#     if request.method == "GET":
+#         return render_template('create_fee.html', classes=classes)
+#     fee_data = extract_data_from_request(request)
+#     fee_data["collected_by"] = session["username"]
+#     db.fees.insert_one(fee_data)
+#     return redirect(url_for("create_fee"))
 
 @app.route('/')
 def home():
@@ -190,21 +191,21 @@ def raise_grievance():
     flash('Your grievance has been recorded!', 'success')
     return render_template('raise_grievance.html', classes=classes)
 
-@app.route("/create_notification", methods=["GET", "POST"])
-@login_required
-def create_notification():
-    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-    if request.method == "GET":
-        all_notification = db.notifications.find();
-        return render_template('create_notification.html', classes=classes, all_notification=all_notification)
-    notification_data = extract_data_from_request(request)
-    notification_data["notification_id"] = get_next_sequence("notification")
-    notification_data["user_id"] = session["user_id"]
-    notification_data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
-    db.notifications.insert_one(notification_data)
-    all_notification = db.notifications.find();
-    flash('Your notification has been created!', 'success')
-    return render_template('create_notification.html', classes=classes,all_notification=all_notification)
+# @app.route("/create_notification", methods=["GET", "POST"])
+# @login_required
+# def create_notification():
+#     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+#     if request.method == "GET":
+#         all_notification = db.notifications.find();
+#         return render_template('create_notification.html', classes=classes, all_notification=all_notification)
+#     notification_data = extract_data_from_request(request)
+#     notification_data["notification_id"] = get_next_sequence("notification")
+#     notification_data["user_id"] = session["user_id"]
+#     notification_data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
+#     db.notifications.insert_one(notification_data)
+#     all_notification = db.notifications.find();
+#     flash('Your notification has been created!', 'success')
+#     return render_template('create_notification.html', classes=classes,all_notification=all_notification)
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
@@ -296,21 +297,21 @@ def create_notification():
         return render_template('create_notification.html', classes=classes)
     
 
-@app.route('/edit_student/<student_id>', methods=['GET', 'POST'])
-@login_required
-def edit_student(student_id):
-    student = db.students.find_one({'student_id': student_id})
+# @app.route('/edit_student/<student_id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_student(student_id):
+#     student = db.students.find_one({'student_id': student_id})
 
-    if request.method == 'POST':
-        student_name = request.form['student_name']
-        class_id = request.form['class_id']
+#     if request.method == 'POST':
+#         student_name = request.form['student_name']
+#         class_id = request.form['class_id']
 
-        db.students.update_one({'student_id': student_id}, {'$set': {
-            'student_name': student_name,
-            'class_id': class_id
-        }})
-        return redirect(url_for('students'))
-    return render_template('edit_student.html', student=student)
+#         db.students.update_one({'student_id': student_id}, {'$set': {
+#             'student_name': student_name,
+#             'class_id': class_id
+#         }})
+#         return redirect(url_for('students'))
+#     return render_template('edit_student.html', student=student)
 
 @app.route('/update_attendance/<attendance_id>', methods=['PUT'])
 def update_attendance(attendance_id):
@@ -348,24 +349,24 @@ def teachers():
         return render_template('teachers.html', teachers=teachers)
     return redirect(url_for('dashboard'))
 
-@app.route('/create_notification', methods=['POST', 'GET'])
-@login_required
-def create_notification():
-    classes = get_classes_from_db()
-    if request.method == 'POST':
-        class_name = request.form.get('class_name')
-        notification_text = request.form.get('notification_text')
-        student_id = session.get('user_id')
-        # Assuming you have a 'notifications' collection in your database
-        db.notifications.insert_one({
-            'class_name': class_name,
-            'notification_text': notification_text,
-            'student_id': student_id,
-            'date': datetime.now()
-        })
-        return redirect(url_for('notifications'))
-    else:
-        return render_template('create_notification.html', classes=classes)
+# @app.route('/create_notification', methods=['POST', 'GET'])
+# @login_required
+# def create_notification():
+#     classes = get_classes_from_db()
+#     if request.method == 'POST':
+#         class_name = request.form.get('class_name')
+#         notification_text = request.form.get('notification_text')
+#         student_id = session.get('user_id')
+#         # Assuming you have a 'notifications' collection in your database
+#         db.notifications.insert_one({
+#             'class_name': class_name,
+#             'notification_text': notification_text,
+#             'student_id': student_id,
+#             'date': datetime.now()
+#         })
+#         return redirect(url_for('notifications'))
+#     else:
+#         return render_template('create_notification.html', classes=classes)
     
 
 @app.route('/user/deactivate/<string:user_id>', methods=['POST'])
@@ -403,25 +404,25 @@ def insert_attendance():
             return render_template('create_attendance.html', classes=get_classes_from_db())
         except Exception as e:
             flash("Error inserting records: " + str(e), 'error')
-            return render_template('create_attendance.html', classes=get_classes_from_db())
+#             return render_template('create_attendance.html', classes=get_classes_from_db())
         
-@app.route('/edit-student', methods=['GET', 'POST'])
-def edit_student():
-    classes = get_classes_from_db()
+# @app.route('/edit-student', methods=['GET', 'POST'])
+# def edit_student():
+#     classes = get_classes_from_db()
 
-    if request.method == 'POST':
-        student_id = request.form.get('student_id')
-        student = get_student_from_db(student_id)
+#     if request.method == 'POST':
+#         student_id = request.form.get('student_id')
+#         student = get_student_from_db(student_id)
 
-        if not student:
-            return respond_with_error("Student not found", 404)
+#         if not student:
+#             return respond_with_error("Student not found", 404)
 
-        updated_data = gather_updated_student_data(request.form, request.files, student)
-        save_updated_student_data(student_id, updated_data)
+#         updated_data = gather_updated_student_data(request.form, request.files, student)
+#         save_updated_student_data(student_id, updated_data)
 
-        return redirect(url_for('dashboard'))
+#         return redirect(url_for('dashboard'))
 
-    return render_template('edit_student.html', student=None, classes=classes)
+#     return render_template('edit_student.html', student=None, classes=classes)
 
 def get_student_from_db(student_id):
     return db.students.find_one({'_id': student_id})
