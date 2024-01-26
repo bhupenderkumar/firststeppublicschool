@@ -9,16 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         /* Alternate row coloring */
-        tbody tr:nth-child(odd) {
-            background-color: #f7f7f7;
-            /* or any other color you prefer for alternate rows */
-        }
-
-        /* Border and spacing inside tbody */
-        tbody tr td {
-            padding: 8px;
-            border-bottom: 1px solid #e0e0e0;
-        }
+      
     </style>
 </head>
 
@@ -26,33 +17,61 @@
     {% include 'header.html' %}
     <div>
         <div>
-            <h1 class="text-3xl text-center mb-4">Attendance</h1>
-            {% if attendance_data %}
-            <p class="mb-4">
-                This is the attendance record for {{ student_name }}.
-            </p>
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white table-auto border-collapse">
-                    <thead>
-                        <tr>
-                            <th
-                                class="py-2 px-4 border-b-2 border-gray-300  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                Date</th>
-                            <th
-                                class="py-2 px-4 border-b-2 border-gray-300  text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in attendance_data %}
-                        <tr>
-                            <td>{{ entry.attendance_date }}</td>
-                            <td>{{ entry.status }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="container mx-auto py-8">
+                <form id="attendanceForm" action="/fetch_attendance" method="POST" class="space-y-4">
+                    <div class="mb-4">
+                        <label for="attendance_date" class="text-gray-700 block mb-2">Date</label>
+                        <input id="date" name="date" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="class_name" class="text-gray-700 block mb-2">Class Name</label>
+                        <select id="class_name" name="class_name" onchange="fetchStudents()" 
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                {% if session.get('user_role') != 'admin' %}
+                                    disabled
+                                {% endif %}
+                                required>
+                            <option value="">Select Class</option>
+                            {% for class_name in classes %}
+                                <option value="{{ class_name }}" {% if session.get('class_name') == class_name %} selected {% endif %}>{{ class_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                               
+        
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Get Attendance</button>
+                </form>
             </div>
+            <h1 class="text-3xl text-center mb-4">Attendance</h1>
+            {% if all_students %}
+            <p class="mb-4 text-center">
+                This the attedance record 
+            </p>
+            <div class="flowbite-container bg-white p-4 mx-auto">
+                <div class="overflow-x-auto">
+                    <table class="flowbite-table w-full bg-white table-auto border-collapse">
+                        <thead class="text-xs  uppercase  dark:text-gray-400">
+                            <tr>
+                                <th class="py-2 px-4 border-b-2 border-gray-300 text-left">Class Name</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-300 text-left">Student Name</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-300 text-left">Date</th>
+                                <th class="py-2 px-4 border-b-2 border-gray-300 text-left">Father Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in attendance_list %}
+                            <tr class="text-xs  uppercase  dark:text-gray-400">
+                                <td class="py-2 px-4">{{ entry.class_name }}</td>
+                                <td class="py-2 px-4">{{ entry.username }}</td>
+                                <td class="py-2 px-4">{{ entry.date }}</td>
+                                <td class="py-2 px-4">{{ entry.fathername }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             {% else %}
             <p class="mb-4 text-center">
                 No attendance records found. Please wait for the attendance data or reach out to the office admin for more information.
@@ -62,5 +81,10 @@
     </div>
     {% include 'footer.html' %}
 </body>
+<script>
+    // Populate the current date
+    const currentDate = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = currentDate;
+</script>
 
 </html>

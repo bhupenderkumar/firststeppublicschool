@@ -11,33 +11,10 @@
 <body>
     {% include 'header.html' %}
     <div  class="w-screen  mt-12 flex flex-col justify-center items-center">
-        <div class="container">
+        <div class="container text-3xl text-center mb-4">
             <h1 class="text-3xl text-center mb-4">Syllabus</h1>
-            <p class="mb-4">
-                This is the syllabus for the {{ class_name }} class.
-            </p>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Topic</th>
-                    <th>Description</th>
-                    <th>Learning Objectives</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for topic in topics %}
-                    <tr>
-                        <td>{{ topic.topic }}</td>
-                        <td>{{ topic.description }}</td>
-                        <td>
-                            {% for learning_objective in topic.learning_objectives %}
-                                * {{ learning_objective }}
-                            {% endfor %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                Please get the PDF copy of the syallabus from the school 
+           
         </div>
     </div>
 

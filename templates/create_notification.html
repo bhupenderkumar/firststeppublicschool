@@ -37,7 +37,7 @@
 
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <h1 class="text-3xl text-center mb-6">Your Notifications</h1>
-                {% if notifications_list %}
+                {% if notifications %}
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white shadow-md rounded">
                         <thead>
@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for notification in notifications_list %}
+                            {% for notification in notifications %}
                             <tr class="border-t">
                                 <td class="py-2 px-3">{{ notification.class_name }}</td>
                                 <td class="py-2 px-3">{{ notification.notification_text }}</td>

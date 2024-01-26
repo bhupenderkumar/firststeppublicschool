@@ -7,13 +7,13 @@
     <title>Fees</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body class="bg-gray-100">
+<body class=" font-sans bg-gray-100 flex flex-col min-h-screen">
     {% include 'header.html' %}
     <div class="container mx-auto mt-10">
         <h1 class="text-3xl text-center mb-4">Fees</h1>
         {% if fees_list|length > 0 %}
-        <div class="overflow-x-auto">
-            <table class="table-auto w-full">
+        <div class="overflow-x-auto bg-white rounded shadow overflow-y-auto relative">
+            <table class="table w-full">
                 <thead>
                     <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left">ID</th>
@@ -33,15 +33,14 @@
                         <td class="py-3 px-6 text-left">{{ fee.student_name }}</td>
                         <td class="py-3 px-6 text-left">₹{{ fee.total_amount }}</td>
                         <td class="py-3 px-6 text-left">{{ fee.submit_date }}</td>
-                        <td class="py-3 px-6 text-left">{{ fee.collected_by }}{{fee}}</td>
-                        <td class="py-3 px-6 text-left"><a href="/downloadfees/{{fee._id}}"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download</a>
+                        <td class="py-3 px-6 text-left">{{ fee.collected_by }}</td>
+                        <td class="py-3 px-6 text-left">
+                            <a href="/downloadfees/{{fee._id}}" class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download</a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
         {% else %}
         <p class="text-gray-700 text-center">No fees submitted for this student yet.</p>
         {% endif %}

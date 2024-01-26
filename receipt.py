@@ -81,11 +81,14 @@ class PDF(FPDF):
         # Dotted Line
         pdf.draw_dotted_line()
         pdf.ln(10)
-        print(self)
+
         # Footer
         pdf.set_font('Arial', 'I', 10)
         pdf.cell(0, 10, 'Recognised by the Education Department', 0, 1, 'C')
         pdf.ln(5)
-        pdf.ln(5)
-        # Output
-        pdf.output(f'fee_receipt_{self['student_name']}_{self['fee_month']}.pdf', 'F')
+
+        # Output with dynamic filename
+        filename = f"fee_receipt_{self['student_name']}_{self['fee_month']}.pdf"
+        pdf.output(filename, 'F')
+        return pdf
+
