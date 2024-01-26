@@ -23,7 +23,7 @@ from werkzeug.utils import secure_filename
 filename = ".././etc/passwd"
 safe_filename = secure_filename(filename)
 from werkzeug.security import generate_password_hash
-from flask import Flask, send_file
+from flask import  send_file
 UPLOAD_FOLDER = 'uploads'  # Create a folder in your project directory named 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
 
@@ -88,9 +88,6 @@ def hash_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 def verify_password(stored_password, provided_password):
-    print(stored_password)
-    print(provided_password)
-    print(bcrypt.checkpw(provided_password.encode('utf-8'), stored_password))
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
 
 
