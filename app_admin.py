@@ -13,8 +13,7 @@ from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
-app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
-MONGO_URI = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
 client = MongoClient(mongo_uri)
 db = client.school_management
 fs = GridFS(db)
@@ -274,8 +273,7 @@ def fees_form():
     classes = mongo.db.classes.find()  # Assuming you have a collection of classes
     return render_template('update_fees.html', classes=classes, current_date=date.today())
 
-
-
+from datetime import datetime
 @app.route('/create_notification', methods=['POST', 'GET'])
 @login_required
 def create_notification():

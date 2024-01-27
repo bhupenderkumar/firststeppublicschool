@@ -193,11 +193,6 @@ MEDIA_FOLDER = './media'
 def media_page():
     return render_template('media.html')
 
-@app.route('/list-media-folders')
-@login_required
-def list_media_folders():
-    folders = get_media_folders()
-    return jsonify({'folders': folders})
 
 @app.route('/activities-plan')
 @login_required
@@ -217,10 +212,6 @@ def list_media_in_folder(folder_name):
     videos = [f for f in files if f.endswith(('.mp4', '.avi', '.mkv'))]
     
     return jsonify({'images': images, 'videos': videos})
-
-@app.route('/media/<folder_name>/<path:filename>')
-def serve_media(folder_name, filename):
-    return send_from_directory(os.path.join(MEDIA_FOLDER, folder_name), filename)
 
 
 def get_classes_from_db():
