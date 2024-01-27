@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parents Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
@@ -18,10 +17,13 @@
         <ul class="space-y-4">
             <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
                 <i class="fas fa-comments text-blue-500 text-2xl mt-1 mr-4"></i>
-                <div>
-                    <h3 class="text-lg font-semibold">Raise Grievance</h3>
-                    <p>Raise your concerns and grievances. We are here to listen and address your issues promptly.</p>
-                </div>
+                <a class="link" href="/raise_grievance">
+                    <div>
+                        <h3 class="text-lg font-semibold">Raise Grievance</h3>
+                        <p>Raise your concerns and grievances. We are here to listen and address your issues promptly.
+                        </p>
+                    </div>
+                </a>
             </li>
             <li class="flex items-start py-2.5 px-4 rounded transition duration-200 hover:bg-blue-700 hover:text-white">
                 <i class="fas fa-file-download text-blue-500 text-2xl mt-1 mr-4"></i>
@@ -60,7 +62,7 @@
             </li>
         </ul>
     </div>
-    
+
 
     {% include 'footer.html' %}
 </body>

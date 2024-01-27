@@ -3,79 +3,127 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    
 </head>
 
 <body>
     {% include 'header.html' %}
-    <div class="container mx-auto  py-5 m-2">
-        <div class="flex flex-col justify-content-center">
-          <h1 class="text-3xl font-bold  m-2">Welcome to Our Educational Platform</h1>
-          <p class="text-lg m-2">Discover, learn, and connect with our community. Dive into the world of knowledge
-            and exploration. Join us today.</p>
-          {% if not session.get('username') %}
-            <a href="/login" class="mb-4 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              <span class="mr-2">Login</span>
-              <i class="fas fa-user-plus ml-2"></i>
-            </a>
-
-          {% endif %}
-          <div class="flex flex-col md:flex-row items-center mb-4">
-              <img src="/static/images/consultant.png"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6" alt="Education Consultant's Photo">
-            <div class="ml-4 px-8 py-6">
-              <h2 class="text-xl font-semibold">Education Consultant</h2>
-                    <p class="text-justify mt-4">When I envisioned the inception of educational spaces, my dream was to
-                        create an environment where every child feels valued, heard, and inspired. Today, I am thrilled
-                        to witness that dream becoming a reality. As an education consultant, I'm consistently
-                        enthralled by the innovation, creativity, and passion that I encounter in these halls each day.
-                        Our dedication to excellence, both in academic pursuits and in nurturing strong character,
-                        propels us forward with unwavering determination. Let's continue to dream, learn, and aspire for
-                        greatness, hand in hand, as we shape the future of education together.
-                        .</p>
-                </div>
-            </div>
-
-          <!-- Principal Section -->
-          <div class="flex flex-col md:flex-row items-center mb-4">
-              <img src="/static/images/principal.jpeg"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6"  alt="Principal's Photo">
-            <div class="ml-4 px-8 py-6">
-              <h2 class="text-xl font-semibold">Principal's Message</h2>
-              <p class="text-justify mt-4">
-                In our esteemed institution, we believe in nurturing minds and souls. The principal aim of our educational
-                platform is not just the dissemination of knowledge but the holistic development of each student. We take
-                pride in our diverse community of learners and educators, coming together to forge the leaders of
-                tomorrow. Through dedication, commitment, and a continuous desire to improve, we ensure that every student
-                is equipped with the skills they need to face the ever-changing challenges of the 21st century. I invite
-                you to become a part of our journey, to witness the transformative power of education firsthand.
-              </p>
-            </div>
-          </div>
+    <div class="container mx-auto py-8 px-4">
       
-          <!-- Vice Principal Section -->
-          <div class="flex flex-col md:flex-row items-center mb-4">
-              <img src="/static/images/viceprincipal.jpeg"  class="w-48 h-48 rounded-full mb-4 md:mb-0 md:mr-6" alt="Vice Principal's Photo">
-            <div class="ml-4 px-8 py-6">
-              <h2 class="text-xl font-semibold">Vice Principal's Message</h2>
-              <p class="text-justify mt-4">
-                Education, at its core, is a beacon that illuminates the path of life. Here, we strive to light that beacon
-                for every student. As the Vice Principal, my goal is to support our vibrant community in its educational
-                journey. Our emphasis on collaborative learning, real-world application, and fostering a love for lifelong
-                learning ensures that our students are well-prepared for the world outside. I'm thrilled to see the incredible
-                accomplishments of our students and faculty, and I'm eager for what the future holds.
-              </p>
-            </div>
-          </div>
-      
-         
-
+<div class="text-center">
+    <h1 class="text-4xl font-bold text-blue-800 mb-4 animated-text">Welcome to Our Educational Platform</h1>
+    <p class="text-lg text-gray-700 mb-6 animated-text">
+        We extend a warm welcome to you as you embark on your educational journey with us. At our vibrant community of learners, excitement fills the air as we join hands to foster a rich and collaborative learning environment. Our platform is thoughtfully crafted to cater to students of all ages, ensuring they have access to a diverse array of tools and resources meticulously curated to pave the way for success in both academic pursuits and the journey of life itself.
+    </p>    
+    {% if not session.get('username') %}
+    <a href="/login" class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 animated-button">
+        <span class="mr-2">Login</span>
+        <i class="fas fa-sign-in-alt"></i>
+    </a>
+    {% endif %}
+</div>
+   
+       
+<section class="my-8">
+    <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">School Activities</h2>
+    <div class="grid gap-6 lg:grid-cols-2">
+        <div class="rounded-lg border border-gray-300 bg-white p-6 transition-transform transform hover:scale-105">
+            <h3 class="text-xl font-bold text-blue-800 mb-2">Rigorous Academic Program</h3>
+            <p class="text-gray-700">We offer a challenging academic program that encourages critical and creative thinking among our students.</p>
+        </div>
+        <div class="rounded-lg border border-gray-300 bg-white p-6 transition-transform transform hover:scale-105">
+            <h3 class="text-xl font-bold text-blue-800 mb-2">Supportive Environment</h3>
+            <p class="text-gray-700">Our school provides a supportive and nurturing environment where students can learn and grow.</p>
+        </div>
+        <div class="rounded-lg border border-gray-300 bg-white p-6 transition-transform transform hover:scale-105">
+            <h3 class="text-xl font-bold text-blue-800 mb-2">Extracurricular Activities</h3>
+            <p class="text-gray-700">Explore interests and develop talents with our variety of extracurricular activities and clubs for students.</p>
+        </div>
+        <div class="rounded-lg border border-gray-300 bg-white p-6 transition-transform transform hover:scale-105">
+            <h3 class="text-xl font-bold text-blue-800 mb-2">Community Collaboration</h3>
+            <p class="text-gray-700">We are committed to working with parents and the community to create a successful educational experience for all students.</p>
         </div>
     </div>
+</section>
+<section class="my-8">
+    <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">Our Mission and Vision</h2>
+    <div class="flex flex-col lg:flex-row gap-4">
+        <div class="w-full lg:w-1/2">
+            <div class="rounded-lg border border-gray-300 bg-white p-6 transition-transform transform hover:scale-105">
+                <h3 class="text-xl font-bold text-blue-800 mb-2">Mission</h3>
+                <p class="text-lg text-gray-700">To empower students at our school in New Delhi, India, fostering a love for learning and preparing them to be lifelong learners and responsible global citizens.</p>
+            </div>
+        </div>
+        <div class="w-full lg:w-1/2">
+            <div class="rounded-lg border border-gray-300 bg-white p-6 transition-transform transform hover:scale-105">
+                <h3 class="text-xl font-bold text-blue-800 mb-2">Vision</h3>
+                <p class="text-lg text-gray-700">To establish our school in New Delhi, India, as a nurturing and inclusive learning community that inspires excellence, values diversity, and creates an environment where every student can thrive.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        <!-- Testimonials -->
+
+        <section class="container mx-auto mt-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">What Parents and Students Say</h2>
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div>
+                    <div class="card p-6 bg-white shadow-lg transition-transform transform hover:scale-105">
+                        <p class="text-lg text-gray-700">"My child has thrived at First Step Public School. The teachers are caring and supportive, and the curriculum is challenging and engaging. I would highly recommend this school to any Indian father looking for a high-quality education for their child." - <span class="font-bold">Rajesh</span></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="card p-6 bg-white shadow-lg transition-transform transform hover:scale-105">
+                        <p class="text-lg text-gray-700">"I love First Step Public School! The teachers are passionate about their subjects, and they make learning fun. I feel challenged and supported in all of my classes. I'm so grateful for the opportunities I've had at this school." - Student</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="card p-6 bg-white shadow-lg transition-transform transform hover:scale-105">
+                        <p class="text-lg text-gray-700">"First Step Public School is a truly special place. The teachers are dedicated to helping each student succeed. My child has grown academically, emotionally, and socially since starting at this school. I'm so glad we chose First Step Public School." - <span class="font-bold">Priya</span></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="card p-6 bg-white shadow-lg transition-transform transform hover:scale-105">
+                        <p class="text-lg text-gray-700">"I've made lifelong friends at First Step Public School. The extracurricular activities are diverse and engaging, and there's something for everyone. I'm so grateful for the experiences I've had at this school." - Student</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="card p-6 bg-white shadow-lg transition-transform transform hover:scale-105">
+                        <p class="text-lg text-gray-700">"First Step Public School is a diverse and inclusive community. My child feels welcome and valued here. The teachers are committed to creating a safe and supportive learning environment for all Indian mothers." - <span class="font-bold">Sunita</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Us -->
+        <section class="my-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4 animated-text">Contact Us</h2>
+            <p class="text-lg text-gray-700 mb-4 animated-text">If you have any questions or would like to visit our school, please don't hesitate to contact us. We'd love to hear from you!</p>
+            <p class="text-lg text-gray-700 mb-6 animated-text"><i class="fas fa-phone mr-2"></i> <a href="tel:+919717267473">Phone: (+91) 9717267473</a> | <a class="button btn" href="https://wa.me/+919717267473">WhatsApp</a></p>
+        </section>
+    </div>
     {% include 'footer.html' %}
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.mySwiper', {
+            spaceBetween: 30,
+            centeredSlides: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
 </body>
 
 </html>

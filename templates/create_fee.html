@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Fee</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
         function validateForm() {
@@ -35,27 +34,23 @@
                     <select id="class_name" name="class_name" onchange="fetchStudents()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                         <option value="">Select Class</option>
                         {% for class_name in classes %}
-                        <option value="{{ class_name.class_name }}">{{ class_name }}</option>
+                        <option value="{{ class_name }}">{{ class_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
-
-                <!-- Hidden Student Name -->
+            <!-- Students Dropdown -->
+            <div class="mb-4" id="studentsDropdown" style="display:none;">
+                <label for="student_list" class="text-gray-700 block mb-2">Students</label>
+                <select id="student_list" name="student_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </select>
+            </div>
+                            <!-- Hidden Student Name -->
                 <input type="hidden" id="hidden_student_name" name="student_name">
 
-                <!-- Students Dropdown -->
-                <div class="mb-4" id="studentsDropdown" style="display:none;">
-                    <label for="student_list" class="text-gray-700 block mb-2">Students</label>
-                    <select id="student_list" name="student_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </select>
-                </div>
+                
 
                 <!-- Amount -->
-                <div class="mb-4">
-                    <label for="amount" class="text-gray-700 block mb-2">Amount</label>
-                    <input id="amount" name="amount" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-
+           
                 <!-- Submit Date -->
                 <div class="mb-4">
                     <label for="submit_date" class="text-gray-700 block mb-2">Submit Date</label>
@@ -75,15 +70,76 @@
 
                 <!-- Fee Type -->
                 <div class="mb-4">
-                    <label for="fee_type" class="text-gray-700 block mb-2">Fee Type</label>
-                    <select id="fee_type" name="fee_type[]" multiple class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <option value="Late Fees">Late Fees</option>
-                        <option value="Month Fee">Month Fee</option>
-                        <option value="Copy & Book Fee">Copy & Book Fee</option>
-                        <!-- Add more options as needed -->
-                    </select>
+                    <label for="fee_types" class="text-gray-700 block mb-2">Fee Types</label>
+                    <div id="fee_types_container">
+                        <div class="fee-type-input">
+                            <select name="fee_type[]" class="fee-type-select shadow appearance-none border rounded w-3/4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="Late Fees">Late Fees</option>
+                                <option value="Month Fee">Month Fee</option>
+                                <option value="Copy & Book Fee">Copy & Book Fee</option>
+                                <option value="Admission Fee">Admission Fee</option>
+                                <option value="Uniform Fee">Uniform Fee</option>
+                                <option value="Exam Fee">Exam Fee</option>
+                                <!-- Add other fee types as needed -->
+                            </select>
+                            <input type="number" name="fee_amount[]" placeholder="Amount" class="fee-amount-input shadow appearance-none border rounded w-1/4 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                    </div>
+                    <button type="button" id="add_fee_type" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Fee Type</button>
                 </div>
-
+                
+                <div class="mb-4">
+                    <label for="total_amount" class="text-gray-700 block mb-2">Total Amount</label>
+                    <input type="text" id="total_amount" readonly name="total_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var feeTypesContainer = document.getElementById('fee_types_container');
+                        var addFeeTypeButton = document.getElementById('add_fee_type');
+                        var totalAmountInput = document.getElementById('total_amount');
+                        
+                        addFeeTypeButton.addEventListener('click', function () {
+                            // Clone the template and append it to the container
+                            var template = document.querySelector('.fee-type-input');
+                            var newFeeType = template.cloneNode(true);
+                
+                            // Update names and IDs of the new fee type inputs
+                            var index = feeTypesContainer.children.length;
+                            newFeeType.querySelector('.fee-type-select').name = `fee_type[${index}]`;
+                            newFeeType.querySelector('.fee-amount-input').name = `fee_amount[${index}]`;
+                
+                            feeTypesContainer.appendChild(newFeeType);
+                
+                            // Clear values in the new fee type inputs
+                            newFeeType.querySelector('.fee-type-select').selectedIndex = 0;
+                            newFeeType.querySelector('.fee-amount-input').value = '';
+                
+                            // Update total amount
+                            updateTotalAmount();
+                        });
+                
+                        feeTypesContainer.addEventListener('input', function (event) {
+                            // Update total amount when any fee type input changes
+                            if (event.target.classList.contains('fee-amount-input')) {
+                                updateTotalAmount();
+                            }
+                        });
+                
+                        function updateTotalAmount() {
+                            var feeAmountInputs = document.querySelectorAll('.fee-amount-input');
+                            var totalAmount = 0;
+                
+                            feeAmountInputs.forEach(function (input) {
+                                var amount = parseFloat(input.value) || 0;
+                                totalAmount += amount;
+                            });
+                
+                            totalAmountInput.value = totalAmount.toFixed(2);
+                        }
+                    });
+                </script>
+                
                 <!-- Submit Button -->
                 <div class="flex justify-end">
                     <button type="submit" class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Fee</button>
@@ -124,5 +180,13 @@
                 console.error('Error fetching students:', error);
             });
     }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get current date in the format "YYYY-MM-DD"
+        var currentDate = new Date().toISOString().slice(0, 10);
+        
+        // Set the default value for the input field
+        document.getElementById('submit_date').value = currentDate;
+    });
+   
 </script>
 </html>

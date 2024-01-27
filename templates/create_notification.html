@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Notification</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
@@ -38,7 +37,7 @@
 
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <h1 class="text-3xl text-center mb-6">Your Notifications</h1>
-                {% if notifications_list %}
+                {% if notifications %}
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white shadow-md rounded">
                         <thead>
@@ -49,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for notification in notifications_list %}
+                            {% for notification in notifications %}
                             <tr class="border-t">
                                 <td class="py-2 px-3">{{ notification.class_name }}</td>
                                 <td class="py-2 px-3">{{ notification.notification_text }}</td>

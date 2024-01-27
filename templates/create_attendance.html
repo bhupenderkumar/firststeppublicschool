@@ -4,44 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Attendance</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
-    <style>
-        /* Add your custom styles here */
-    </style>
+    <title>Create Attendance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
     {% include 'header.html' %}
-    <div class="container">
-        <div >
+    <div class="flex justify-center text-3xl">
+        <div>
             <h1 class="text-3xl text-center mb-6">Insert Attendance</h1>
-            <form action="/insert_attendance" method="POST" onsubmit="return validateForm();">
+            <form action="/create_attendance" method="POST" onsubmit="return validateForm();">
                 <!-- Class Name Dropdown -->
                 <div class="mb-4">
                     <label for="class_name" class="text-gray-700 block mb-2">Class Name</label>
-                    <select id="class_name" name="class_name" onchange="fetchStudents()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="class_name" name="class_name" onchange="fetchStudents()"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        required>
                         <option value="">Select Class</option>
                         {% for class_name in classes %}
                         <option value="{{ class_name }}">{{ class_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="mb-4" id="studentsDropdown" style="display:none;">
-                    <label for="student_list" class="text-gray-700 block mb-2">Students</label>
-                    <select id="student_list" name="student_id[]" multiple
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <!-- Populate students dynamically here -->
-                    </select>
-                </div>
-                <input type="text" name="status" hidden value="Present"/>
                 <div class="mb-4">
                     <label for="attendance_date" class="text-gray-700 block mb-2">Attendance Date</label>
                     <input id="attendance_date" name="attendance_date" type="date"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         required>
                 </div>
+                <div class="mb-4" id="">
+                    <label for="student_list" class="text-gray-700 block mb-2">Students</label>
+                    <div class="relative overflow-x-auto shadow-md ">
+                        <table id="" class=" text-gray-500 dark:text-gray-400">
+                            <thead
+                                class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="p-4">
+                                        <div class="flex items-center">
+                                            <input id="checkbox-all-search" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox-all-search" class="sr-only">Present</label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-lg"> <!-- Increased font size -->
+                                        Student Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-lg"> <!-- Increased font size -->
+                                        Student Class Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-lg"> <!-- Increased font size -->
+                                        Student Father Name
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTable">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <input type="text" name="status" hidden value="Present" />
+
                 <div class="flex justify-end">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Insert
@@ -52,27 +77,64 @@
     </div>
 
     <script>
-        // JavaScript code for fetching and populating student names based on class selection
+        // Get the current date in the format YYYY-MM-DD
+        const currentDate = new Date().toISOString().split('T')[0];
+
+        // Set the default value of the date input to today's date
+        document.getElementById('attendance_date').value = currentDate;
         // JavaScript code for fetching and populating student names based on class selection
         function fetchStudents() {
+
             const selectedClass = document.getElementById('class_name').value;
             fetch(`/get-students/${selectedClass}`)
                 .then(response => response.json())
                 .then(data => {
-                    let studentsDropdown = document.getElementById('student_list');
-                    studentsDropdown.innerHTML = "";
+                    let studentsTable = document.getElementById('studentTable');
+                    studentsTable.innerHTML = "";
 
                     if (data && data.length > 0) {
-                        data.forEach(student => {
-                            let option = document.createElement('option');
-                            option.value = student._id;
-                            option.textContent = student.username; // Modify this to include other student information if needed
-                            studentsDropdown.appendChild(option);
-                        });
 
-                        document.getElementById('studentsDropdown').style.display = 'block';
+                            data.forEach(student => {
+                                let row = studentsTable.insertRow();
+
+
+
+                                // Column 1: Attendance checkbox
+                                let cell1 = row.insertCell(0);
+                                let checkbox = document.createElement('input');
+                                checkbox.type = 'checkbox';
+                                checkbox.classList.add('student_list');
+                                checkbox.name = 'student_list[]';
+                                checkbox.value = student._id;
+                                checkbox.checked = true; // Checkbox is checked by default
+                                cell1.appendChild(checkbox);
+                                row.onclick = function () {
+                                    // Toggle the checkbox state on click
+                                    checkbox.checked = !checkbox.checked;
+                                    row.style.backgroundColor = checkbox.checked ? '' : 'red';
+                                };
+                                // Column 2: Student Name
+                                let cell2 = row.insertCell(1);
+                                cell2.textContent = student.username; // Modify this to include other student information if needed
+
+                                // Column 3: Class
+                                let cell3 = row.insertCell(2);
+                                cell3.textContent = student.class_name; // Modify this based on your data structure
+
+                                // Column 4: Father Name
+                                let cell4 = row.insertCell(3);
+                                cell4.textContent = student.fathername; // Modify this based on your data structure
+
+                                // Add the 'clickable' and 'red' class to the second cell
+                                cell2.classList.add('clickable');
+                                cell2.onclick = function () {
+                                    // Toggle the 'red' class on click
+                                    cell2.classList.toggle('red');
+                                };
+                            });
+
+
                     } else {
-                        document.getElementById('studentsDropdown').style.display = 'none';
                     }
                 })
                 .catch(error => {
@@ -81,29 +143,34 @@
         }
 
 
+
         // JavaScript code for form validation
         function validateForm() {
-            const className = document.getElementById("class_name").value.trim();
-            const studentIDs = document.querySelectorAll("#student_list option:checked");
-            const attendanceDate = document.getElementById("attendance_date").value.trim();
+            // Get the list of absent students
+            const absentStudents = document.querySelectorAll('.red');
+            const selectedDate = document.getElementById('attendance_date').value;
+            alert(absentStudents.length)
+            // Check if there are absent students
+            if (absentStudents.length > 0) {
+                // Extract student names from the NodeList
+                const absentStudentNames = Array.from(absentStudents).map(student => student.parentNode.nextElementSibling.textContent).join(', ');
 
-            if (!className) {
-                alert("Please select a class.");
-                return false;
+                // Ask the user for confirmation
+                const confirmation = window.confirm(`Are you sure you want to mark the following students as absent on ${selectedDate}? \n${absentStudentNames}`);
+
+                // Return true if the user confirms, otherwise return false
+                return confirmation;
+            } else {
+                // Ask the user for confirmation
+                const confirmation = window.confirm(`No students are marked absent. Are you sure you want to proceed without marking any student as absent on ${selectedDate}?`);
+
+                // Return true if the user confirms, otherwise return false
+                return confirmation;
             }
-
-            if (studentIDs.length === 0) {
-                alert("Please select at least one student.");
-                return false;
-            }
-
-            if (!attendanceDate) {
-                alert("Please select an attendance date.");
-                return false;
-            }
-
-            return true;
+            return false;
         }
+
+
     </script>
 </body>
 

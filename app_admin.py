@@ -13,8 +13,9 @@ from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
-mongo_uri = os.environ.get('MONGO_URI', 'mongodb://mongodb:27017/school_management')
-app.config["MONGO_URI"] = mongo_uri  # replace with your database URI
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority'
+app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
+MONGO_URI = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
 client = MongoClient(mongo_uri)
 db = client.school_management
 fs = GridFS(db)
@@ -153,16 +154,16 @@ def extract_data_from_request(request_obj, exclude_keys=None):
         if not exclude_keys or key not in exclude_keys
     }
 
-@app.route("/fees", methods=["GET", "POST"])
-@login_required
-def create_fee():
-    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-    if request.method == "GET":
-        return render_template('create_fee.html', classes=classes)
-    fee_data = extract_data_from_request(request)
-    fee_data["collected_by"] = session["username"]
-    db.fees.insert_one(fee_data)
-    return redirect(url_for("create_fee"))
+# @app.route("/fees", methods=["GET", "POST"])
+# @login_required
+# def create_fee():
+#     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+#     if request.method == "GET":
+#         return render_template('create_fee.html', classes=classes)
+#     fee_data = extract_data_from_request(request)
+#     fee_data["collected_by"] = session["username"]
+#     db.fees.insert_one(fee_data)
+#     return redirect(url_for("create_fee"))
 
 @app.route('/')
 def home():
@@ -190,21 +191,21 @@ def raise_grievance():
     flash('Your grievance has been recorded!', 'success')
     return render_template('raise_grievance.html', classes=classes)
 
-@app.route("/create_notification", methods=["GET", "POST"])
-@login_required
-def create_notification():
-    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
-    if request.method == "GET":
-        all_notification = db.notifications.find();
-        return render_template('create_notification.html', classes=classes, all_notification=all_notification)
-    notification_data = extract_data_from_request(request)
-    notification_data["notification_id"] = get_next_sequence("notification")
-    notification_data["user_id"] = session["user_id"]
-    notification_data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
-    db.notifications.insert_one(notification_data)
-    all_notification = db.notifications.find();
-    flash('Your notification has been created!', 'success')
-    return render_template('create_notification.html', classes=classes,all_notification=all_notification)
+# @app.route("/create_notification", methods=["GET", "POST"])
+# @login_required
+# def create_notification():
+#     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+#     if request.method == "GET":
+#         all_notification = db.notifications.find();
+#         return render_template('create_notification.html', classes=classes, all_notification=all_notification)
+#     notification_data = extract_data_from_request(request)
+#     notification_data["notification_id"] = get_next_sequence("notification")
+#     notification_data["user_id"] = session["user_id"]
+#     notification_data["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
+#     db.notifications.insert_one(notification_data)
+#     all_notification = db.notifications.find();
+#     flash('Your notification has been created!', 'success')
+#     return render_template('create_notification.html', classes=classes,all_notification=all_notification)
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
@@ -269,23 +270,159 @@ def is_admin(user_id):
     # Dummy function, implement your own logic to check if a user is admin
    return True
 
-@app.route('/edit-student', methods=['GET', 'POST'])
-def edit_student():
+@app.route('/fees-form')
+def fees_form():
+    classes = mongo.db.classes.find()  # Assuming you have a collection of classes
+    return render_template('update_fees.html', classes=classes, current_date=date.today())
+
+
+
+@app.route('/create_notification', methods=['POST', 'GET'])
+@login_required
+def create_notification():
     classes = get_classes_from_db()
-
     if request.method == 'POST':
-        student_id = request.form.get('student_id')
-        student = get_student_from_db(student_id)
+        class_name = request.form.get('class_name')
+        notification_text = request.form.get('notification_text')
+        student_id = session.get('user_id')
+        # Assuming you have a 'notifications' collection in your database
+        db.notifications.insert_one({
+            'class_name': class_name,
+            'notification_text': notification_text,
+            'student_id': student_id,
+            'date': datetime.now()
+        })
+        return redirect(url_for('notifications'))
+    else:
+        return render_template('create_notification.html', classes=classes)
+    
 
-        if not student:
-            return respond_with_error("Student not found", 404)
+# @app.route('/edit_student/<student_id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_student(student_id):
+#     student = db.students.find_one({'student_id': student_id})
 
-        updated_data = gather_updated_student_data(request.form, request.files, student)
-        save_updated_student_data(student_id, updated_data)
+#     if request.method == 'POST':
+#         student_name = request.form['student_name']
+#         class_id = request.form['class_id']
 
-        return redirect(url_for('dashboard'))
+#         db.students.update_one({'student_id': student_id}, {'$set': {
+#             'student_name': student_name,
+#             'class_id': class_id
+#         }})
+#         return redirect(url_for('students'))
+#     return render_template('edit_student.html', student=student)
 
-    return render_template('edit_student.html', student=None, classes=classes)
+@app.route('/update_attendance/<attendance_id>', methods=['PUT'])
+def update_attendance(attendance_id):
+    data = request.json  
+    new_status = data.get('new_status')
+    updated_result = db.attendance.update_one(
+        {'_id': ObjectId(attendance_id)},
+        {'$set': {'status': new_status}}
+    )
+    if updated_result.modified_count > 0:
+        flash(f"Record updated succesfully ", 'success')
+        return jsonify({'message': 'Attendance record updated successfully'})
+    else:
+        flash(f"Error please check the request or contact admin dept  ", 'dangeer')
+        return jsonify({'message': 'No attendance record found for the given ID'})
+
+
+@app.route("/create_fees", methods=["GET", "POST"])
+@login_required
+def create_fee():
+    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+    if request.method == "GET":
+        return render_template('create_fee.html', classes=classes)
+    fee_data = extract_data_from_request(request)
+    fee_data['fee_type'] = request.form.getlist('fee_type[]')
+    fee_data["collected_by"] = session["username"]
+    db.fees.insert_one(fee_data)
+    return redirect(url_for("create_fee"))
+
+@app.route('/teachers')
+@login_required
+def teachers():
+    if session.get('user_role') == 'admin':
+        teachers = db.teachers.find()
+        return render_template('teachers.html', teachers=teachers)
+    return redirect(url_for('dashboard'))
+
+# @app.route('/create_notification', methods=['POST', 'GET'])
+# @login_required
+# def create_notification():
+#     classes = get_classes_from_db()
+#     if request.method == 'POST':
+#         class_name = request.form.get('class_name')
+#         notification_text = request.form.get('notification_text')
+#         student_id = session.get('user_id')
+#         # Assuming you have a 'notifications' collection in your database
+#         db.notifications.insert_one({
+#             'class_name': class_name,
+#             'notification_text': notification_text,
+#             'student_id': student_id,
+#             'date': datetime.now()
+#         })
+#         return redirect(url_for('notifications'))
+#     else:
+#         return render_template('create_notification.html', classes=classes)
+    
+
+@app.route('/user/deactivate/<string:user_id>', methods=['POST'])
+@login_required
+def deactivate_user(user_id):
+    # Ensure only admins can access this route
+    if session.get('user_role') != 'admin':
+        return redirect(url_for('dashboard'), "You don't have permission to access this page!")
+    db.students.update_one({"_id": user_id}, {"$set": {"is_active": False}})
+    return redirect(url_for('admin_dashboard'), "User has been deactivated!")
+
+
+
+@app.route('/create_attendance', methods=['GET', 'POST'])
+def insert_attendance():
+    if request.method == 'GET':
+        return render_template('create_attendance.html', classes=get_classes_from_db())
+    elif request.method == 'POST':
+        try:
+            class_name = request.form.get('class_name')
+            student_ids = request.form.getlist('student_id[]')  # Get multiple selected student IDs
+            date = request.form.get('date')
+            status = request.form.get('status')
+            remaining_fields = extract_data_from_form(request_form=request.form)
+            for student_id in student_ids:
+                db.attendance.insert_one({
+                    **remaining_fields,
+                    'class_name': class_name,
+                    'student_id': student_id,
+                    'user_id': student_id,
+                    'date': date,
+                    'status': status
+                })
+            flash("Records inserted successfully", 'success')
+            return render_template('create_attendance.html', classes=get_classes_from_db())
+        except Exception as e:
+            flash("Error inserting records: " + str(e), 'error')
+#             return render_template('create_attendance.html', classes=get_classes_from_db())
+        
+# @app.route('/edit-student', methods=['GET', 'POST'])
+# def edit_student():
+#     classes = get_classes_from_db()
+
+#     if request.method == 'POST':
+#         student_id = request.form.get('student_id')
+#         student = get_student_from_db(student_id)
+
+#         if not student:
+#             return respond_with_error("Student not found", 404)
+
+#         updated_data = gather_updated_student_data(request.form, request.files, student)
+#         save_updated_student_data(student_id, updated_data)
+
+#         return redirect(url_for('dashboard'))
+
+#     return render_template('edit_student.html', student=None, classes=classes)
 
 def get_student_from_db(student_id):
     return db.students.find_one({'_id': student_id})
