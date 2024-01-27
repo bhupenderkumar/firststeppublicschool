@@ -13,7 +13,6 @@ from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY')
-mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority'
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 MONGO_URI = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
 client = MongoClient(mongo_uri)

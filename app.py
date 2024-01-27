@@ -13,6 +13,7 @@ from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
 mongo_uri = os.environ.get('MONGODB_URI')
 # mongo_uri = 'localhost:27017'
+
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school
@@ -64,6 +65,21 @@ login_manager = LoginManager(app)
 mongo = pymongo.MongoClient(mongo_uri)
 print('initialized mongo instance')
 print(mongo.db)
+
+@app.route("/transfer_certificates", methods=["GET", "POST"])
+def transfer_certificates():
+    return render_template('transfer_certificates.html')
+
+@app.route("/regular_feedback", methods=["GET", "POST"])
+@login_required
+def regular_feedback():
+    return render_template('regular_feedback.html')
+
+
+@app.route("/report_card", methods=["GET", "POST"])
+def report_card():
+    return render_template('report_card.html')
+                                            
 
 
 @app.route("/create_fees", methods=["GET", "POST"])
