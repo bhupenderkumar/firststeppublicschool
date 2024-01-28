@@ -52,7 +52,9 @@ class PDF(FPDF):
                 continue
 
             pdf.set_font('Arial', 'B', 12)  # Set font to bold for property names
-            pdf.cell(50, 10, f"{re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()}: {key}", 0, 0, 'L')
+            formatted_key = re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()
+            pdf.cell(50, 10, f"{formatted_key}", 0, 0, 'L')
+            # pdf.cell(50, 10, f"{re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()}: {key}", 0, 0, 'L')
             pdf.set_font('Arial', '', 12)  # Set font back to regular
             if "student_id" in key :
                 pdf.cell(0, 10, f"{value[-4:]}", 0, 1, 'R')
