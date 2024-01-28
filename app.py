@@ -1,6 +1,5 @@
 import io
 import time
-from tkinter import Canvas
 from bson import ObjectId
 from flask import Flask, Response, flash, jsonify, render_template, request, redirect, url_for, session
 from flask import  make_response
