@@ -10,13 +10,13 @@ import os
 from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
 import pymongo
-from io import BytesIO
 from receipt import PDF
 app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
 mongo_uri = os.environ.get('MONGODB_URI')
 # mongo_uri = 'localhost:27017'
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school
@@ -161,7 +161,6 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         user = db.students.find_one({'username': username})
         if user and verify_password(user['password'], password):
             session['user_id'] = str(user['_id'])
