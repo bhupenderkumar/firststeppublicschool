@@ -1,19 +1,24 @@
+import io
 import time
+from tkinter import Canvas
 from bson import ObjectId
 from flask import Flask, Response, flash, jsonify, render_template, request, redirect, url_for, session
+from flask import  make_response
+from fpdf import FPDF
 from pymongo import MongoClient
 import bcrypt
 import os
 from flask_login import LoginManager, current_user
 from flask_pymongo import PyMongo
 import pymongo
+from io import BytesIO
 from receipt import PDF
 app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
 mongo_uri = os.environ.get('MONGODB_URI')
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
 # mongo_uri = 'localhost:27017'
-
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
 db = client.school
@@ -466,16 +471,27 @@ def raise_grievance():
         return render_template('raise_grievance.html', grievances=grievances,  classes=classes)
 
 
-
 @app.route('/downloadfees/<fee_id>')
 def download_fee_receipt(fee_id):
+    # fee_data = db.fees.find_one({"_id": ObjectId(fee_id)})
+    # if not fee_data:
+    #     return "Fee data not found", 404
+    # pdf = PDF()
+    # pdf_data = pdf.create_receipt(fee_data)
+    # pdf_bytes = pdf_data.output(dest='S').encode('ISO-8859-1')
+    # response = make_response(pdf_bytes)
+    # response.headers['Content-Type'] = 'application/pdf'
+    # response.headers['Content-Disposition'] = 'inline; filename="generated_pdf.pdf"'
+    # return response
     fee_data = db.fees.find_one({"_id": ObjectId(fee_id)})
-    
     if not fee_data:
         return "Fee data not found", 404
-    pdf_data = PDF.create_receipt(fee_data)
-    filename = f"fee_receipt_{fee_data['student_name']}_{fee_data['fee_month']}.pdf"
-    response = send_file(filename, as_attachment=True, attachment_filename=filename, mimetype='application/pdf')
+    pdf = PDF()
+    pdf_data= pdf.create_receipt(fee_data)
+    pdf_bytes = pdf_data.output(dest='S').encode('ISO-8859-1')
+    response = make_response(pdf_bytes)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="generated_pdf.pdf"'
     return response
 
 @app.route('/notifications')

@@ -30,11 +30,10 @@ class PDF(FPDF):
         for i in range(0, length, spacing * 1):
             self.line(10 + i, current_y, 10 + i + spacing, current_y)
 
-    def create_receipt(self):
+    def create_receipt(self, fee_data):
         pdf = PDF()
         pdf.add_page()
         pdf.set_font('Arial', 'B', 14)
-
         # Dotted Line
         pdf.draw_dotted_line()
         pdf.ln(10)
@@ -45,40 +44,42 @@ class PDF(FPDF):
 
         # Content
         pdf.set_font('Arial', '', 12)
-        month = datetime.datetime.strptime(self["submit_date"], "%Y-%m-%d").strftime("%B")
+        month = datetime.datetime.strptime(fee_data["submit_date"], "%Y-%m-%d").strftime("%B")
 
-        for key, value in self.items():
-            if key == "_id" or key == "total_amount" or key == "collected_by" or key == "fee_type":  
-                continue
+        try:
+            for key, value in fee_data.items():
+                if key == "_id" or key == "total_amount" or key == "collected_by" or key == "fee_type":
+                    continue
 
-            pdf.set_font('Arial', 'B', 12)  # Set font to bold for property names
-            formatted_key = re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()
-            pdf.cell(50, 10, f"{formatted_key}", 0, 0, 'L')
-            # pdf.cell(50, 10, f"{re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()}: {key}", 0, 0, 'L')
-            pdf.set_font('Arial', '', 12)  # Set font back to regular
-            if "student_id" in key :
-                pdf.cell(0, 10, f"{value[-4:]}", 0, 1, 'R')
-            else:
-                pdf.cell(0, 10, f"{value}", 0, 1, 'R')
+                pdf.set_font('Arial', 'B', 12)  # Set font to bold for property names
+                formatted_key = re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()
+                formatted_key = formatted_key.replace('[', '').replace(']', '')
+                print(f"Adding content: {formatted_key}")
+                pdf.cell(50, 10, f"{formatted_key}:", 0, 0, 'L')
+                pdf.set_font('Arial', '', 12)  # Set font back to regular
+                if "student_id" in key:
+                    pdf.cell(0, 10, f"{value[-4:]}", 0, 1, 'R')
+                else:
+                    pdf.cell(0, 10, f"{value}", 0, 1, 'R')
+        except Exception as e:
+            print(f"Error adding content: {str(e)}")
+            return f"Error generating PDF: {str(e)}", 500
 
         # Dotted Line
         pdf.draw_dotted_line()
         pdf.ln(10)
 
-        # total_amount
-        print(self)
-
         # Fee Type (if available)
-        if 'collected_by' in self:
+        if 'collected_by' in fee_data:
             pdf.cell(95, 10, "Collected By:", 0, 0, 'R')
-            pdf.cell(0, 10, f" {self['collected_by']}", 0, 1, 'R')
+            pdf.cell(0, 10, f" {fee_data['collected_by']}", 0, 1, 'R')
             pdf.ln(5)
 
         # Total total_amount
         pdf.draw_dotted_line()
         pdf.cell(95, 10, "Total Amount:", 0, 0, 'R')
-        pdf.cell(0, 10, f" {self['total_amount']}", 0, 1, 'R')
-        pdf.cell(0, 10, f" {number_to_words(self['total_amount'])} Rupees only", 0, 1, 'R')
+        pdf.cell(0, 10, f" {fee_data['total_amount']}", 0, 1, 'R')
+        pdf.cell(0, 10, f" {number_to_words(fee_data['total_amount'])} Rupees only", 0, 1, 'R')
 
         # Dotted Line
         pdf.draw_dotted_line()
@@ -86,11 +87,7 @@ class PDF(FPDF):
 
         # Footer
         pdf.set_font('Arial', 'I', 10)
-        pdf.cell(0, 10, 'Recognised by the Education Department', 0, 1, 'C')
+        pdf.cell(0, 10, 'Recognized by the Education Department', 0, 1, 'C')
         pdf.ln(5)
-
-        # Output with dynamic filename
-        filename = f"fee_receipt_{self['student_name']}_{self['fee_month']}.pdf"
-        pdf.output(filename, 'F')
+        print(pdf)
         return pdf
-
