@@ -53,7 +53,7 @@ class PDF(FPDF):
 
                 pdf.set_font('Arial', 'B', 12)  # Set font to bold for property names
                 formatted_key = re.sub(r'\\[\\d*\\]', '', key).replace('_', ' ').title()
-                formatted_key = formatted_key.replace('[', '').replace(']', '')
+                formatted_key = re.sub(r'\s*\[[^]]*\]\s*', '', formatted_key)
                 print(f"Adding content: {formatted_key}")
                 pdf.cell(50, 10, f"{formatted_key}:", 0, 0, 'L')
                 pdf.set_font('Arial', '', 12)  # Set font back to regular
