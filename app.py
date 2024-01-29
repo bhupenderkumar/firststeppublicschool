@@ -66,7 +66,7 @@ def login_required(f):
 login_manager = LoginManager(app)
 mongo = pymongo.MongoClient(mongo_uri)
 print('initialized mongo instance')
-print(mongo.db)
+
 
 @app.route("/transfer_certificates", methods=["GET", "POST"])
 def transfer_certificates():
@@ -105,6 +105,8 @@ def hash_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 def verify_password(stored_password, provided_password):
+    print(stored_password)
+    print(provided_password.encode('utf-8'))
     return bcrypt.checkpw(provided_password.encode('utf-8'), stored_password)
 
 
@@ -163,11 +165,12 @@ def login():
         user = db.students.find_one({'username': username})
         if user and verify_password(user['password'], password):
             session['user_id'] = str(user['_id'])
-            session['user_role'] = user['role']
+            session['role'] = user['role']
             session['username'] = user['username']
             session['class_name'] = user['class_name']
             return redirect(url_for('home'))
-        
+        else:
+            flash(f"Invalid username or password", 'danger')
         return render_template('login.html', error="Invalid username or password")
     
     if request.method == 'GET' and session.get('user_id') is not None:
@@ -222,7 +225,7 @@ def get_classes_from_db():
 
 
 def initialize_classes():
-    default_classes = ["Pre Nursery", "Nursery/Prep 1", "L.K.G/Prep II", "U.K.G/Prep II", "I", "II", "III", "IV", "V"]    
+    default_classes = ["Pre Nursery", "Nursery", "L.K.G", "U.K.G", "I", "II", "III", "IV", "V"]    
     if mongo.db.classes.count_documents({}) == 0:
         for cls in default_classes:
             mongo.db.classes.insert_one({"name": cls})
@@ -233,6 +236,10 @@ def initialize_classes():
         })
     else:
         print("Counter for 'grievance' already exists.")
+    if not db.counters.find_one({"_id":"tc_id"}):
+        db.counters.insert_one({"_id": "tc_id","count":1000})
+    else:
+        print("counter for tc already exists")
 initialize_classes()
 
 @app.route('/logout')
@@ -264,7 +271,7 @@ def update_attendance(attendance_id):
         flash(f"Record updated succesfully ", 'success')
         return jsonify({'message': 'Attendance record updated successfully'})
     else:
-        flash(f"Error please check the request or contact admin dept  ", 'dangeer')
+        flash(f"Error please check the request or contact admin dept  ", 'danger')
         return jsonify({'message': 'No attendance record found for the given ID'})
 
 
@@ -282,13 +289,21 @@ def handle_file_uploads(request_files, existing_data=None):
     return file_data
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
-    user = db.users.find_one({'username': session['username']})  # Assuming you store the admin's username in the session
+    user = db.students.find_one({'username': session['username']})  
     if request.method == 'POST':
+        # updateing as i want only few fields to be updated
+        
         form_data = extract_data_from_form(request.form, user)
         file_data = handle_file_uploads(request.files, user)
         form_data.update(file_data)
-        db.users.update_one({'username': session['username']}, {'$set': form_data},  upsert=True)
+        password = form_data['password']
+        if not verify_password(user['password'], password):
+            hashed_password = hash_password(password)
+            form_data['password'] = hashed_password
+        
+        db.students.update_one({'username': session['username']}, {'$set': form_data},  upsert=True)
         return render_template('home.html')
     return render_template('edit_profile.html', admin=user)
 
@@ -317,9 +332,9 @@ def extract_data_from_request(request_obj, exclude_keys=None):
 @app.route('/create_notification', methods=['POST','GET'])
 @login_required
 def create_notification():
-    if session.get('user_role') != 'admin':
+    if session.get('role') != 'admin':
         return render_template('create_notification.html',classes=get_classes_from_db());
-    if session.get('user_role') == 'admin':
+    if session.get('role') == 'admin':
         notifications = db.notifications.find()
     if request.method == 'GET':
         return render_template('create_notification.html',classes=get_classes_from_db(),notifications =notifications);
@@ -381,7 +396,7 @@ from bson import ObjectId
 @app.route('/fetch_attendance', methods=['GET', 'POST'])
 @login_required
 def fetch_attendance():
-    admin = session.get('user_role')
+    admin = session.get('role')
     class_name = session.get('class_name')
     combined_data = []
     all_students = []
@@ -411,7 +426,7 @@ def fetch_attendance():
         if attendance_record:
             student_details = db.students.find_one({'_id': object_id})
         combined_data = {**attendance_record, **student_details}
-    print(combined_data)
+    
     return render_template('attendance.html', classes=get_classes_from_db(), attendance_list=combined_data, all_students=all_students, date=date)
 
 
@@ -419,22 +434,57 @@ def get_next_sequence(name):
     # First, check if the document exists
     counter_doc = db.counters.find_one({"_id": name})
     if counter_doc:
+        db.counters.update_one({'_id':name}, {'$inc': {'count': 1}})
         return int(int(counter_doc["count"]) + 1)
     else:
         return 1;
+    
 
 @app.route('/fees')
 @login_required
 def fees():
     student_id = session.get('user_id')
-    fees_list = []
     student_name = session.get('user_name')
     fees_list = []
-    if session.get('user_role') == 'admin':
+    if session.get('role') == 'admin':
         fees_list = list(db.fees.find())
     else:
         fees_list = list(db.fees.find({'student_id': student_id}))
     return render_template('fees.html', fees_list=fees_list, student_name=student_name)
+
+from flask import request
+
+
+@app.route('/tcdetails/<tc_id>', methods=['GET'])
+def tcdetails(tc_id):
+    tc_record = db.tc.find_one({'_id':int(tc_id)})
+    return render_template('tc_detail.html', tc_detail= tc_record);
+    
+
+@app.route('/tc_list', methods=['GET'])
+@login_required
+def get_tc_list():
+    tc_list = db.tc.find()
+    return render_template('tc_list.html',tc_list= tc_list)
+
+@app.route('/create_tc', methods=['POST','GET'])
+def create_tc():
+    classes = get_classes_from_db()
+    if request.method == 'GET':
+        return render_template('create_tc.html', classes=classes)
+    else:
+        student_class = request.form.get('class_name')
+        student_id = request.form.get('student_id')
+        form_request = extract_data_from_request(request)
+        student_data = db.students.find_one({'_id': ObjectId(student_id), 'class_name': student_class})
+        if student_data:
+            tc_id = get_next_sequence('tc_id')
+            db.students.update_one({'_id': ObjectId(student_id)}, {'$set': {'inactive': True}})
+            form_request["_id"] = tc_id
+            form_request["student_name"] = student_data["username"]
+            db.tc.insert_one(form_request)
+        return render_template('create_tc.html', classes=classes)
+
 
 @app.route("/raise_grievance", methods=["GET", "POST"])
 @login_required
@@ -442,7 +492,7 @@ def raise_grievance():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     user_id = session['user_id']
-    if session.get('user_role') == 'admin':
+    if session.get('role') == 'admin':
         grievances = list(db.grievances.find())
     else:
         grievances = list(db.grievances.find({"user_id": user_id}))
@@ -466,19 +516,9 @@ def raise_grievance():
         classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
         return render_template('raise_grievance.html', grievances=grievances,  classes=classes)
 
-
 @app.route('/downloadfees/<fee_id>')
+@login_required
 def download_fee_receipt(fee_id):
-    # fee_data = db.fees.find_one({"_id": ObjectId(fee_id)})
-    # if not fee_data:
-    #     return "Fee data not found", 404
-    # pdf = PDF()
-    # pdf_data = pdf.create_receipt(fee_data)
-    # pdf_bytes = pdf_data.output(dest='S').encode('ISO-8859-1')
-    # response = make_response(pdf_bytes)
-    # response.headers['Content-Type'] = 'application/pdf'
-    # response.headers['Content-Disposition'] = 'inline; filename="generated_pdf.pdf"'
-    # return response
     fee_data = db.fees.find_one({"_id": ObjectId(fee_id)})
     if not fee_data:
         return "Fee data not found", 404
@@ -512,8 +552,7 @@ def not_found_error(error):
 
 @app.route('/get-students/<class_name>')
 def get_students(class_name):
-    students = db.students.find({"class_name": class_name})
-    print(students.count())
+    students = db.students.find({"$and": [{"class_name": class_name}, {"$or": [{"inactive": False}, {"inactive": {"$exists": False}}]}]})
     students_list = [
         {"username": student["username"],"fathername":student['fathername'],'class_name':student['class_name'], "_id": str(student["_id"])}
         for student in students
@@ -523,7 +562,7 @@ def get_students(class_name):
 @app.route('/students')
 @login_required
 def students():
-    if session.get('user_role') == 'admin':
+    if session.get('role') == 'admin':
         students = db.students.find()
         return render_template('students.html', students=students)
     return redirect(url_for('dashboard'))
@@ -531,7 +570,7 @@ def students():
 @app.route('/grades')
 @login_required
 def grades():
-    if session.get('user_role') == 'admin':
+    if session.get('role') == 'admin':
         grades = db.grades.find()
         return render_template('grades.html', grades=grades)
     return redirect(url_for('dashboard'))

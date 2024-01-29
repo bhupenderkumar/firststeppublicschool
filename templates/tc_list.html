@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raise Grievance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function validateForm() {
+            const details = document.getElementById("grievance_details").value.trim();
+            if (!details) {
+                alert("Please fill out the grievance details properly!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    {% include 'header.html' %}
+    <div class="container mx-auto mt-10 p-5">
+        <div class="bg-white shadow-md rounded p-6">
+            <h1 class="text-3xl text-center mb-6">Transfer Certificate</h1>
+        </div>
+
+        <!-- Grievances Table -->
+        <div class="bg-white shadow-md rounded mt-6 p-6">
+            <h1 class="text-3xl text-center mb-6"></h1>
+            <table class="min-w-full bg-white shadow-md rounded">
+                <thead>
+                    <tr>
+                        <th class="w-1/5 py-2">TC ID</th>
+                        <th class="w-1/5 py-2">Student ID</th>
+                        <th class="w-1/5 py-2">Student Name</th>
+                        <th class="w-1/5 py-2">Student Class Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tc in tc_list %}
+                    <tr class="border-t">
+                        <td class="py-2 px-3"><a  class="text-blue-500 hover:text-blue-700" href="/tcdetails/{{tc._id}}">{{ tc._id }}</a></td>
+                        <td class="py-2 px-3">{{ tc.student_id }}</td>
+                        <td class="py-2 px-3">{{ tc.student_name }}</td>
+                        <td class="py-2 px-3">{{ tc.class_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if not tc_list %}
+            <p class="mt-4 text-center">No TC Records Found</p>
+            {% endif %}
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+<script>
+    async function submitFormAndReload(event) {
+        setTimeout(() => {
+            location.reload();  
+        }, 3000);  
+    }
+</script>
+</html>

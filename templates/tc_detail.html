@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Fee</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+
+<body class=" h-screen">
+    {% include 'header.html' %}
+
+    <div class="container mx-auto py-12">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h1 class="text-2xl font-bold mb-4">Transfer Certificate Detail</h1>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">Student Name:</p>
+                    <p class="text-black">{{ tc_detail.student_name }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">Student ID:</p>
+                    <p class="text-black">{{ tc_detail.student_id }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">Class Name:</p>
+                    <p class="text-black">{{ tc_detail.class_name }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">Student Attendance:</p>
+                    <p class="text-black">{{ tc_detail.student_attendance }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">TC Reason:</p>
+                    <p class="text-black">{{ tc_detail.tc_reason }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">Student Behavior Description:</p>
+                    <p class="text-black">{{ tc_detail.student_behaviour_description }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 font-semibold">Parent Behavior Description:</p>
+                    <p class="text-black">{{ tc_detail.parent_behaviour_description }}</p>
+                </div>
+                <!-- Add more properties as needed -->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

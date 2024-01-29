@@ -12,84 +12,161 @@
 
 <body class="font-sans bg-gray-100">
 
-    <div class="container mx-auto">
+    <div class="">
         <!-- Navbar -->
-        <nav class="border-b dark:bg-gray-900">
-            <div class="max-w-screen-xl flex items-center justify-between mx-auto ">
+
+
+        <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a href="/" class="font-bold text-xl">
                     <img src="/static/images/school_logo.jpeg" alt="First Step School" class="w-16 h-16 rounded-full">
                     First Step School
                 </a>
-                <!-- Mobile Hamburger Icon -->
-                <button id="navbar-toggle" onclick="toggleNavbar()" class="md:hidden">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+                <button data-collapse-toggle="navbar-multi-level" type="button"
+                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    aria-controls="navbar-multi-level" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M1 1h15M1 7h15M1 13h15" />
+                    </svg>
                 </button>
-                <!-- Desktop Navbar Links -->
-                <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                    <a href="/" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-home mr-2"></i> Home
-                    </a>
-                    <a href="/fees" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-dollar-sign mr-2"></i> Fees
-                    </a>
-                    <a href="/raise_grievance" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-bullhorn mr-2"></i> Raise Grievance
-                    </a>
-                    <a href="/syllabus" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-book-open mr-2"></i> Syllabus
-                    </a>
-                    <a href="/holiday-calendar" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-calendar-alt mr-2"></i> Holiday Calendar
-                    </a>
-                    <a href="/report_card"  class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-calendar-alt mr-2"></i> Report Card
-                    </a>
-                    <a href="/regular_feedback"  class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-calendar-alt mr-2"></i> Children Feedback
-                    </a>
-                    <a href="/activities-plan" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="fas fa-tasks mr-2"></i> Activities Plan
-                    </a>
-                    {% if session.get('user_role') == 'admin' %}
-                        <a href="/create_notification" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                            <i class="fas fa-bell mr-2"></i> Create Notification
-                        </a>
-                        <a href="/create_fees" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                            <i class="fas fa-dollar-sign mr-2"></i> Create Fees
-                        </a>
-                        <a href="/create_attendance" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                            <i class="fas fa-calendar-check mr-2"></i> Create Attendance
-                        </a>
-                    {% endif %}
-                    <a href="/fetch_attendance" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                        <i class="far fa-calendar-check mr-2"></i> Attendance
-                    </a>
-                    {% if session.get('username') %}
+                <div class="hidden w-full md:block md:w-auto" id="navbar-multi-level">
+                    <ul
+                        class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                        <li>
+                            <a href="/"
+                                class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                                <i class="fas fa-home mr-2"></i> Home
+                            </a>
+                        </li>
+                     
+                        <li class="nav-item">
+                            <a href="/fees" class="nav-link">
+                                <i class="fas fa-dollar-sign mr-2"></i> Fees
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/raise_grievance" class="nav-link">
+                                <i class="fas fa-bullhorn mr-2"></i> Raise Grievance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/syllabus" class="nav-link">
+                                <i class="fas fa-book-open mr-2"></i> Syllabus
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/holiday-calendar" class="nav-link">
+                                <i class="fas fa-calendar-alt mr-2"></i> Holiday Calendar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/report_card" class="nav-link">
+                                <i class="fas fa-file-alt mr-2"></i> Report Card
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/tc_list" class="nav-link">
+                                <i class="fas fa-exchange-alt mr-2"></i> Transfer Certificate
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/regular_feedback" class="nav-link">
+                                <i class="fas fa-comments mr-2"></i> Children Feedback
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/activities-plan" class="nav-link">
+                                <i class="fas fa-tasks mr-2"></i> Activities Plan
+                            </a>
+                        </li>
+                        {% if session.get('user_role') == 'admin' %}
+                        {% for link in [
+                        {'url': '/create_notification', 'text': 'Create Notification', 'icon': 'fas fa-bell'},
+                        {'url': '/create_tc', 'text': 'Create TC/Remove Student From Class', 'icon': 'fas fa-bell'},
+                        {'url': '/create_fees', 'text': 'Create Fees', 'icon': 'fas fa-dollar-sign'},
+                        {'url': '/create_attendance', 'text': 'Create Attendance', 'icon': 'fas fa-calendar-check'}
+                        ] %}
+                        <li class="nav-item">
+                            <a href="{{ link.url }}" class="nav-link">
+                                <i class="{{ link.icon }} mr-2"></i> {{ link.text }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        {% endif %}
+                        <li class="nav-item">
+                            <a href="/fetch_attendance" class="nav-link">
+                                <i class="far fa-calendar-check mr-2"></i> Attendance
+                            </a>
+                        </li>
+                        {% if session.get('username') %}
                         <!-- If the user is logged in, display these links -->
-                        <a href="/logout" class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 rounded">
-                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                        </a>
-                    {% else %}
-                    <a href="/transfer_certificates"  class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
-                        <i class="fa fa-camera"></i> TC(Transfer Certificate)
-                    </a>
+                        
+                        {% else %}
+                        <li class="nav-item">
+                            <a href="/transfer_certificates"
+                                class="nav-link text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
+                                <i class="fa fa-camera"></i> TC(Transfer Certificate)
+                            </a>
+                        </li>
                         <!-- If the user is not logged in, display only these links -->
-                        <a href="/login" class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
-                            <i class="fas fa-sign-in-alt mr-2"></i> Login
-                        </a>
-                        <a href="/signup" class="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-solid border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
-                            <i class="fas fa-user-plus mr-2"></i> Signup
-                        </a>
-                       
-                    {% endif %}
+                        <li class="nav-item">
+                            <a href="/login"
+                                class="nav-link text-indigo-600 text-center border border-transparent rounded hover:bg-indigo-100 hover:text-indigo-700 transition-colors duration-300">
+                                <i class="fas fa-sign-in-alt mr-2"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/signup"
+                                class="nav-link text-indigo-600 text-center border border-solid border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
+                                <i class="fas fa-user-plus mr-2"></i> Signup
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if session.get('username') %}
+                        <li>
+                            <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
+                                class="flex items-center text-blue-500 text-indigo-600 justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
+                                {{session.get('username')}}
+                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 4 4 4-4" />
+                                </svg></button>
+                            <!-- Dropdown menu -->
+                            <div id="dropdownNavbar"
+                                class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownLargeButton">
+                                   
+                                    
+                                    
+                                    <li>
+                                        <a href="/edit-profile"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit Profile</a>
+                                    </li>
+                                   
+                                    <li>
+                                        <a href="/logout"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
+                                    </li>   
+                                   
+                                </ul>
+                               
+                            </div>
+                        </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
 
+
+
         <!-- Mobile Sidebar (Hidden by default) -->
-       
+
 
         <!-- Content Area -->
         <div class="container mx-auto mt-4">

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Fee</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function validateForm() {
+            alert("Presss Escape to cancel the request")
+        }
+    </script>
+</head>
+<body class=" h-screen">
+    {% include 'header.html' %}
+    <div class="container mx-auto py-12">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h1 class="text-3xl text-center mb-6">Create TC/Remove the Student Name</h1>
+            <form action="/create_tc" method="POST" onsubmit="return validateForm();">
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700 block mb-2">Class Name</label>
+                    <select id="class_name" name="class_name" onchange="fetchStudents()"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        required>
+                        <option value="">Select Class</option>
+                        {% for class_name in classes %}
+                        <option value="{{ class_name }}">{{ class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4" id="studentsDropdown" style="display:none;">
+                    <label for="student_list" class="text-gray-700 block mb-2">Students</label>
+                    <select id="student_list" name="student_id" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700 block mb-2">Student Attendance</label>
+                    <input type="number" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="student_attendance" name="student_attendance" placeholder="Attendance Number" />
+                </div>
+                <div class="mb-4">
+                    <label for="tc_reason" class="text-gray-700 block mb-2">TC Reason</label>
+                    <input type="text" name="tc_reason"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="tc_reason" required="required" placeholder="TC Reason">
+                </div>
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700 block mb-2">Student Behaviour Description</label>
+                    <textarea
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text" id="student_behaviour_description" name="student_behaviour_description"
+                        placeholder="Student Behaviour Description" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="class_name" class="text-gray-700 block mb-2">Parents Behaviour Description</label>
+                    <textarea
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text" id="parent_behaviour_description" name="parent_behaviour_description"
+                        placeholder="Parents Behaviour Description" required></textarea>
+                </div>
+                <input type="hidden" id="hidden_student_name" name="student_name">
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create
+                        TC</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+<script>
+    function fetchStudents() {
+        const selectedClass = document.getElementById('class_name').value;
+        fetch(`/get-students/${selectedClass}`)
+            .then(response => response.text())
+            .then(data => {
+                let studentsDropdown = document.getElementById('student_list');
+                studentsDropdown.innerHTML = "";
+                data = JSON.parse(data);
+                if (data && data.length > 0) {
+                    data.forEach(student => {
+                        let option = document.createElement('option');
+                        option.value = student._id;
+                        option.textContent = `${student.username} (studentName)| ${student.fathername} (fathername)`;
+                        studentsDropdown.appendChild(option);
+                    });
+                    document.getElementById('studentsDropdown').style.display = 'block';
+                    document.getElementById('hidden_student_name').value = data[0].username;
+                    studentsDropdown.addEventListener('change', function() {
+                        let selectedOption = this.options[this.selectedIndex];
+                        document.getElementById('hidden_student_name').value = selectedOption.dataset.studentName;
+                    });
+                } else {
+                    document.getElementById('studentsDropdown').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching students:', error);
+            });
+    }
+</script>
+</html>
