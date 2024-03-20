@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Fee</title>
+    <title>First Step Public School | Holi Registration</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
@@ -18,8 +18,8 @@
     
     <div class="container mx-auto py-12">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h1 class="text-3xl text-center mb-6">Holi Registration</h1>
-            <form action="/holi" method="POST" enctype="multipart/form-data">
+            <h1 class="text-3xl text-center mb-6">Holi Registration(Only for Outside Childrens)</h1>
+            <form id="myForm" action="/holi" method="POST" enctype="multipart/form-data">
 
                 <div class="mb-4">
                     <label for="class_name" class="text-gray-700 block mb-2">Your Child Class</label>
@@ -52,15 +52,17 @@
                 <!-- Parent's Phone Number -->
                 <div class="mb-4">
                     <label for="parent_phone" class="text-gray-700 block mb-2">Parent's Phone Number</label>
-                    <input id="parent_phone" required name="parent_phone" type="tel" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input id="parent_phone" required name="parent_phone" type="tel" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <span id="phoneError" class="text-red-500 hidden">Please enter a valid phone number</span>
                 </div>
-
+        
                 <!-- Emergency Contact Number -->
                 <div class="mb-4">
                     <label for="emergency_contact" class="text-gray-700 block mb-2">Emergency Contact Number</label>
-                    <input id="emergency_contact" required name="emergency_contact" type="tel" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <input id="emergency_contact" required name="emergency_contact" type="tel" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <span id="emergencyError" class="text-red-500 hidden">Please enter a valid phone number</span>
                 </div>
-
+        
                 <!-- Submit Button -->
                 <div class="flex justify-end">
                     <button type="submit" class="animate__animated animate__bounceIn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
@@ -70,6 +72,35 @@
     </div>
     {% include 'footer.html' %}
 </body>
+<script>
+    // Mobile number validation
+    function validatePhone(phoneInput, errorSpan) {
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phoneRegex.test(phoneInput.value)) {
+            errorSpan.classList.remove('hidden');
+            return false;
+        } else {
+            errorSpan.classList.add('hidden');
+            return true;
+        }
+    }
 
+    // Form submission handler
+    document.getElementById('myForm').addEventListener('submit', function(event) {
+        const parentPhoneInput = document.getElementById('parent_phone');
+        const emergencyPhoneInput = document.getElementById('emergency_contact');
+        const parentErrorSpan = document.getElementById('phoneError');
+        const emergencyErrorSpan = document.getElementById('emergencyError');
+
+        // Validate both phone numbers
+        const parentValid = validatePhone(parentPhoneInput, parentErrorSpan);
+        const emergencyValid = validatePhone(emergencyPhoneInput, emergencyErrorSpan);
+
+        // Prevent form submission if any phone number is invalid
+        if (!parentValid || !emergencyValid) {
+            event.preventDefault();
+        }
+    });
+</script>
 
 </html>
