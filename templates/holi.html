@@ -18,11 +18,11 @@
     
     <div class="container mx-auto py-12">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h1 class="text-3xl text-center mb-6">Holi Registration(Only for Outside Childrens | Less than 6 years of age)</h1>
+            <h1 class="text-3xl text-center mb-6">Holi Registration(Only for Outside Childrens)</h1>
             <form id="myForm" action="/holi" method="POST" enctype="multipart/form-data">
                 <div class="mb-4">
                     <label for="class_name" class="text-gray-700 block mb-2">Your Child Class</label>
-                    <select id="class_name" name="class_name" onchange="fetchStudents()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <select id="class_name" name="class_name"  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                         <option value="">Select Class</option>
                         {% for class_name in classes %}
                         <option value="{{ class_name }}">{{ class_name }}</option>
@@ -37,9 +37,18 @@
                     <label for="children_attending" class="text-gray-700 block mb-2">Children Attending Name:</label>
                     <input id="children_attending" name="children_attending" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
-                <div class="mb-4">
-                    <label for="child_photo" class="text-gray-700 block mb-2">Upload Photo of Children</label>
-                    <input id="child_photo" name="child_photo" type="file" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" accept="image/*" required>
+                <div class="flex flex-wrap mb-4">
+                    <!-- Child's Date of Birth -->
+                    <div class="w-full md:w-1/2 md:pr-2 mb-4">
+                        <label for="child_dob" class="text-gray-700 block mb-2">Child's Date of Birth</label>
+                        <input id="child_dob" name="child_dob" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                    
+                    <!-- Age Display -->
+                    <div class="w-full md:w-1/2 md:pl-2 mb-4">
+                        <label for="child_age" class="text-gray-700 block mb-2">Child's Age</label>
+                        <input id="child_age" name="child_age" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+                    </div>
                 </div>
 
                 <!-- Parent's Phone Number -->
@@ -65,6 +74,8 @@
     </div>
     {% include 'footer.html' %}
 </body>
+
+
 <script>
     // Mobile number validation
     function validatePhone(phoneInput, errorSpan) {
@@ -94,6 +105,38 @@
             event.preventDefault();
         }
     });
+</script>
+<script>
+    // Calculate age from date of birth
+    function calculateAge(dateOfBirth) {
+        var today = new Date();
+        var birthDate = new Date(dateOfBirth);
+        var years = today.getFullYear() - birthDate.getFullYear();
+        var months = today.getMonth() - birthDate.getMonth();
+        if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+            years--;
+            months += 12;
+        }
+        var days = today.getDate() - birthDate.getDate();
+        if (days < 0) {
+            var prevMonthLastDay = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            days += prevMonthLastDay;
+            months--;
+        }
+        return [years, months, days];
+    }
+
+    // Update age display
+    function updateAgeDisplay() {
+        var dobInput = document.getElementById('child_dob');
+        var ageInput = document.getElementById('child_age');
+        var dob = dobInput.value;
+        var age = calculateAge(dob);
+        ageInput.value = age[0] + " years, " + age[1] + " months, " + age[2] + " days";
+    }
+
+    // Event listener for date of birth change
+    document.getElementById('child_dob').addEventListener('change', updateAgeDisplay);
 </script>
 
 </html>
