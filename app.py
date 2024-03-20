@@ -78,15 +78,27 @@ def regular_feedback():
     return render_template('regular_feedback.html')
 
 
-
 @app.route("/holi", methods=["GET", "POST"])
 def holi():
     classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
     if request.method == "GET":
-        return render_template('holi.html',classes=classes)
-    holi_data = extract_data_from_request(request)
+        return render_template('holi.html', classes=classes)
+    
+    holi_data = extract_data_from_form(request.form)
+    
+    # Handle file upload
+    if 'child_photo' in request.files:
+        file = request.files['child_photo']
+        if file.filename != '':
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            with open(file_path, 'rb') as f:
+                from bson import Binary
+                holi_data['child_photo'] = Binary(f.read())
+            os.remove(file_path)  # Remove the file after reading its content
     db.holi.insert_one(holi_data)
-    flash(f" Child is Registered Successfully . Registered Child Name is " + holi_data.get('children_attending',''), 'success')
+    flash("Child is Registered Successfully. Registered Child Name is " + holi_data.get('children_attending', ''), 'success')
     return redirect(url_for("holi"))
 
 @app.route("/report_card", methods=["GET", "POST"])
