@@ -15,6 +15,8 @@ app = Flask(__name__)
 from gridfs import GridFS
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_secret_key_here')
 mongo_uri = os.environ.get('MONGODB_URI')
+mongo_uri = 'mongodb+srv://vercel-admin-user:XQUP69T1QwIRD3yJ@cluster0.gstjaja.mongodb.net/?retryWrites=true&w=majority';
+
 # mongo_uri = 'localhost:27017'
 app.config["MONGODB_URI"] = mongo_uri  # replace with your database URI
 client = MongoClient(mongo_uri)
@@ -77,6 +79,17 @@ def transfer_certificates():
 def regular_feedback():
     return render_template('regular_feedback.html')
 
+
+
+@app.route("/holi", methods=["GET", "POST"])
+def holi():
+    classes = get_classes_from_db()  # Implement this function to fetch class names from MongoDB
+    if request.method == "GET":
+        return render_template('holi.html',classes=classes)
+    holi_data = extract_data_from_request(request)
+    db.holi.insert_one(holi_data)
+    flash(f" Child is Registered Successfully . Registered Child Name is " + holi_data.get('children_attending',''), 'success')
+    return redirect(url_for("holi"))
 
 @app.route("/report_card", methods=["GET", "POST"])
 def report_card():
