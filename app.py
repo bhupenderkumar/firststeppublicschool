@@ -103,8 +103,20 @@ def holi():
 @app.route("/report_card", methods=["GET", "POST"])
 def report_card():
     return render_template('report_card.html')
-                                            
-
+    
+@app.route("/nursery-promotion-charges", methods=["GET", "POST"])
+def nursery_promotion_charges():
+    return render_template('nursery-promotion-charges.html')
+     
+@app.route("/lkg-promotion-charges", methods=["GET", "POST"])
+def lkg_promotion_charges():
+    return render_template('lkg-promotion-charges.html')
+                                              
+@app.route("/ukg-promotion-charges", methods=["GET", "POST"])
+def ukg_promotion_charges():
+    return render_template('ukg-promotion-charges.html')
+                                              
+                                                            
 
 @app.route("/create_fees", methods=["GET", "POST"])
 @login_required

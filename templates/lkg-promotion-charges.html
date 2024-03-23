@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKG Promotion Charges</title>
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+    /* Add alternating row colors */
+    .bg-striped tr:nth-child(even) {
+        background-color: #f7fafc; /* Change to your desired background color */
+    }
+
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div>
+        <div class="m-2">
+            <h1 class="text-3xl text-center mb-4">Nursery to LKG Promotion Charge</h1>
+            <div class="max-w-full overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg overflow-hidden">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-chalkboard-teacher text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Tuition Fees</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹3600</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-book text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Books</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹0</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-copy text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Copies</span>
+                                </div>
+                                <div class="text-xs text-gray-500">(13 copies - 3 Hindi, 3 English, 3 Math, 2 3-in-one for Unit test and Holiday Homework)</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹420</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-tshirt text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Uniform (One set of Shirt and Pant)</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹0</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-paint-brush text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Classroom Accessories</span>
+                                </div>
+                                <div class="text-xs text-gray-500">(Water Colour, Pencil Colour, Sharpener, Eraser)</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹900</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-book-open text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Diary</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹0</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-globe text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Website Charges</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹0</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-id-card text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">ID Card</span>
+                                </div>
+                                <div class="text-xs text-gray-500">(Single ID cards)</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹150</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-file-alt text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Document Charges</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹600</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex mr-2">
+                                        <i class="fas fa-file-invoice-dollar text-gray-400"></i>
+                                    </span>
+                                    <span class="font-medium text-gray-900">Exam Fees</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹150</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">₹5820</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>
