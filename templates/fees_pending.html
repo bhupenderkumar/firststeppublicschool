@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class=" font-sans bg-gray-100 flex flex-col min-h-screen">
+    {% include 'header.html' %}
+    <div class="container mx-auto mt-10">
+        <h1 class="text-3xl text-center mb-4">Pending Fees</h1>
+        {% if fees_list|length > 0 %}
+        <div class="overflow-x-auto bg-white rounded shadow overflow-y-auto relative">
+            <table class="table w-full">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">ID</th>
+                        <th class="py-3 px-6 text-left">Class Name</th>
+                        <th class="py-3 px-6 text-left">Student Name</th>
+                        <th class="py-3 px-6 text-left">Amount</th>
+                        <th class="py-3 px-6 text-left">Submit Date</th>
+                        <th class="py-3 px-6 text-left">Collected By</th>
+                        <th class="py-3 px-6 text-left">Download</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    {% for fee in fees_list %}
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ fee._id }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.class_name }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.student_name }}</td>
+                        <td class="py-3 px-6 text-left">₹{{ fee.total_amount }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.submit_date }}</td>
+                        <td class="py-3 px-6 text-left">{{ fee.collected_by }}</td>
+                        <td class="py-3 px-6 text-left">
+                            <a href="/downloadfees/{{fee._id}}" class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Download</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+        <p class="text-gray-700 text-center">No fees submitted for this student yet.</p>
+        {% endif %}
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>

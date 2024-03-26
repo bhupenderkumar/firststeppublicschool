@@ -100,6 +100,12 @@ def holi():
     flash("Child is Registered Successfully. Registered Child Name is " + holi_data.get('children_attending', ''), 'success')
     return redirect(url_for("holi"))
 
+
+@app.route("/fees_pending", methods=["GET", "POST"])
+def report_card():
+    return render_template('fees_pending.html')
+
+
 @app.route("/report_card", methods=["GET", "POST"])
 def report_card():
     return render_template('report_card.html')
